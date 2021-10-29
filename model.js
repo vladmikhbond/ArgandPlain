@@ -124,11 +124,14 @@ function toPoland(input) {
 function evalPoland(poland) {
     const stack = [];
     for (let pol of poland) {
-        if (pol.tag == 'r')
+        switch(pol.tag) {
+        case 'r':
             stack.push(new Complex(pol.num, 0));
-        else if (pol.tag == 'i')
+            break;
+        case 'i':
             stack.push(new Complex(0, pol.num));
-        else if ("+-/*^".indexOf(pol.tag) > -1) {
+            break;
+        case '+': case '-': case '/': case '*': case '^':
             let c2 = stack.pop();
             let c1 = stack.pop();
             if (!c1 || !c2) 
@@ -139,7 +142,17 @@ function evalPoland(poland) {
                 case '*': stack.push(c1.mul(c2)); break;
                 case '/': stack.push(c1.div(c2)); break;
                 case '^': stack.push(c1.pow(c2)); break;
-            }   
+            } 
+            break; 
+        case '#': case '~':
+            let c = stack.pop();
+            if (!c) 
+                throw new Error("wrong poland expression")
+            switch (pol.tag) {
+                case '#': stack.push(c); break;
+                case '~': stack.push(c.neg()); break;
+            } 
+            break;  
         }
     }
     return stack[0];
@@ -156,8 +169,10 @@ function test() {
 
     let a4 = lexicalAnalisys("-1.2 + +3.4i");
     let p4 = toPoland(a4);
+    let c4 = evalPoland(p4);
     console.log(a4);
     console.log(p4);
+    console.log(c4);
 
     console.log("-----------------");
     let a = lexicalAnalisys("3.4i");

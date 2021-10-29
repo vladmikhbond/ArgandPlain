@@ -66,9 +66,10 @@ function lexicalAnalisys(input)
 
 function getPriority(op) {
     switch(op) {
-        case '^': return 9;
-        case '*': case '/': return 8;
-        case '+': case '-': return 7;
+        case '#': case '~': return 9;
+        case '^': return 8;
+        case '*': case '/': return 7;
+        case '+': case '-': return 6;
         case ')':  return 1;
         case '(':  return 0;     
     }
@@ -80,27 +81,33 @@ function priorityInTop(stack) {
     return getPriority(stack[stack.length - 1].tag);
 }
 
+// [Lexema] => [Lexema]
 function toPoland(input) {
+    const isBracketOrOperator = x => "^*/+-()#~".indexOf(x) > -1;
+    
     let output = [], stack = [];
     for (let lex of input) {
         let p = getPriority(lex.tag);
-        if ("^*/+-()".indexOf(lex.tag) > -1) 
+        if (isBracketOrOperator(lex.tag)) 
         {
-           if (lex.tag == ')') {
-            while (priorityInTop(stack) != 0 ) {
-                let t = stack.pop();
-                output.push(t);
-             }
-             stack.pop();  // remove '('
-           } else if (p == 0 || p > priorityInTop(stack)) {
+            if (lex.tag == ')') 
+            {
+                while (priorityInTop(stack) != 0 ) {
+                    output.push(stack.pop());
+                }
+                stack.pop();  // remove '('
+            } 
+            else if (p == 0 || p > priorityInTop(stack)) 
+            {
                stack.push(lex);
-           } else {
+            } 
+            else 
+            {
                 while (priorityInTop(stack) >= p ) {
-                   let t = stack.pop();
-                   output.push(t);
+                    output.push(stack.pop());
                 }
                 stack.push(lex);
-           }          
+            }          
         } 
         else 
         {
@@ -148,9 +155,11 @@ function evaluate(exp) {
 function test() {
 
     let a4 = lexicalAnalisys("-1.2 + +3.4i");
+    let p4 = toPoland(a4);
     console.log(a4);
+    console.log(p4);
 
-    
+    console.log("-----------------");
     let a = lexicalAnalisys("3.4i");
     let r = a.map(x => x.toString()).join('');
     // if (r == 'i:3.4') console.log('OK');

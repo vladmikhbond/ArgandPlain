@@ -14,19 +14,42 @@ class Lexema {
     }
 }
 
-function lexicalAnalisys(input) {
+// String => [Lexema]
+//
+function lexicalAnalisys(input) 
+{
+    const isOpenBracketOrOperator = x => "(+-*/^".indexOf(x) > -1;
+    const isBracketOrOperator = x => "()+-*/^".indexOf(x) > -1;
+    const isDigit = x => "01234.56789".indexOf(x) > -1;
+    
+    input = input.replace(/\s/g, '');
     const output = []; 
-    let nStr = "";
-    for (let z of input) {
-        if ("()+-*/^".indexOf(z) > -1) {
-            if (nStr) {           
-                output.push(new Lexema('r', +nStr));
-                nStr = "";
+    let nStr = "";  // строковое представление числа
+    for (let i = 0; i < input.length; i++) 
+    {
+        let c = input[i];
+        if (isBracketOrOperator(c)) {
+            // unary operation
+            if (i == 0 || isOpenBracketOrOperator(input[i-1])) 
+            {   
+                if (c == '-') 
+                   output.push(new Lexema('~'));  //  unary -
+                else if (c == '+') 
+                   output.push(new Lexema('#'));  //  unary +
+                else
+                    output.push(new Lexema(c));
+            } 
+            else 
+            {
+                if (nStr) {           
+                    output.push(new Lexema('r', +nStr));
+                    nStr = "";
+                }
+                output.push(new Lexema(c));
             }
-            output.push(new Lexema(z));
-        } else if ("0123456789.".indexOf(z) > -1) {
-            nStr += z;
-        } else if (z == 'i') {
+        } else if (isDigit(c)) {
+            nStr += c;
+        } else if (c == 'i') {
             if (nStr) {           
                 output.push(new Lexema('i', +nStr));               
             } else {
@@ -124,6 +147,10 @@ function evaluate(exp) {
 
 function test() {
 
+    let a4 = lexicalAnalisys("-1.2 + +3.4i");
+    console.log(a4);
+
+    
     let a = lexicalAnalisys("3.4i");
     let r = a.map(x => x.toString()).join('');
     // if (r == 'i:3.4') console.log('OK');
@@ -153,7 +180,7 @@ function test() {
     console.log(c3);
 
 }
-// test()
+test()
 
 
 

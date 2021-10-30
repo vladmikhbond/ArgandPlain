@@ -1,6 +1,4 @@
 
-//const { default: Complex } = require("complex.js");
-
 class Lexema {
     constructor(tag, num) 
     {
@@ -11,6 +9,47 @@ class Lexema {
         if (!this.num)
             return this.tag;
         return this.num + (this.tag == 'i' ? 'i' : '');
+    }
+}
+
+class Expression {
+    constructor(line, color) {
+        // parse line to name & body
+        let ss = line.toLowerCase().split('=');
+        if (ss.length == 2) {
+            this.name = ss[0].trim();
+            this.body = ss[1].trim();
+        } else if (ss.length == 1){
+            this.name = null;
+            this.body = ss[0].trim();
+        } else {
+            throw new Error("Wrong expression");
+        }
+
+        this.color = color;
+        this.value = null;
+    }
+
+    replace(other) {
+        if (other.name) {
+            let re = new RegExp(other.name,"g");
+            let subst = "(" + other.body + ")";
+            this.body = this.body.replace(re, subst);
+        }        
+    }
+    
+    eval() {
+        try {
+            let l = lexicalAnalisys(this.body);
+            let p = toPoland(l);
+            this.value = evalPoland(p);
+        } catch (error) {
+            this.value = null;
+        }      
+    }
+
+    isNear(x, y) { 
+        return new Complex(x, y).sub(this.value).abs() < 5/K; 
     }
 }
 
@@ -158,51 +197,22 @@ function evalPoland(poland) {
     return stack[0];
 }
 
-function evaluate(exp) {
-    let l = lexicalAnalisys(exp);
-    let p = toPoland(l);
-    let c = evalPoland(p);
-    return c;
-}
 
 function test() {
+    function t(input, expected) {
+        let a = lexicalAnalisys(input);
+        let p = toPoland(a);
+        let c = evalPoland(p);
+        if (c.toString() == expected) 
+            console.log('OK')
+        else 
+            console.log(input)
+    }
 
-    let a4 = lexicalAnalisys("-1.2 + +3.4i");
-    let p4 = toPoland(a4);
-    let c4 = evalPoland(p4);
-    console.log(a4);
-    console.log(p4);
-    console.log(c4);
-
-    console.log("-----------------");
-    let a = lexicalAnalisys("3.4i");
-    let r = a.map(x => x.toString()).join('');
-    // if (r == 'i:3.4') console.log('OK');
-    let p = toPoland(a);
-    let c = evalPoland(p);
-    console.log(c);
-    
-
-    let a1 = lexicalAnalisys("1.2 + 3.4i");
-    let r1 = a1.map(x => x.toString()).join('');
-    // if (r1 == 'r:1.2+:undefinedi:3.4') console.log('OK');
-    let p1 = toPoland(a1);
-    let c1 = evalPoland(p1);
-    console.log(c1);
-
-
-    let a2 = lexicalAnalisys("((1-(2+3))*1)^(1+2)");
-    let p2 = toPoland(a2);
-    let c2 = evalPoland(p2);
-    //console.log(p2.map(x => x.toString()).join(''))
-    console.log(c2);
-
-    let a3 = lexicalAnalisys("1+2i*3i-4/(5+6i)");
-    let p3 = toPoland(a3);
-    let c3 = evalPoland(p3);
-    // console.log(p3.map(x => x.toString()).join(''))
-    console.log(c3);
-
+    t("-1.2 + +3.4i", "-1.2 + 3.4i");
+    t("3.4i", "3.4i"); 
+    t("((1-(2+3))*1)^(1+2)", "-63.99999999999998 + 2.3513218543629174e-14i");  
+    t("1+2i*3i-4/(5+6i)", "-5.327868852459017 + 0.3934426229508196i");   
 }
 test()
 

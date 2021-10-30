@@ -16,7 +16,6 @@ function toModelCoord(e) {
        -(e.offsetY - canvas.width / 2) / K ];
 }
 
-
 document.getElementById("canvas").addEventListener('mousedown', function(e) {
     for (let i = 0; i < EXPRS.length; i++) {
        if (EXPRS[i].isNear(...toModelCoord(e))) {
@@ -25,10 +24,16 @@ document.getElementById("canvas").addEventListener('mousedown', function(e) {
        }
     }
 });
+
 document.getElementById("canvas").addEventListener('mousemove', function(e) {
     if (selInput) {
         let [x,y] = toModelCoord(e);
-        selInput.value = `${x.toFixed(2)} + ${y.toFixed(2)}i`; 
+        let eqPos = selInput.value.indexOf('=');
+        let right = `${x.toFixed(2)} + ${y.toFixed(2)}i`;
+        if (eqPos == -1)       
+            selInput.value = right;
+        else 
+            selInput.value = selInput.value.slice(0, eqPos + 1) + " " + right;
         refresh();
     }
     

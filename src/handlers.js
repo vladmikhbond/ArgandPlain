@@ -8,7 +8,7 @@ range.addEventListener('change', function(e) {
     refresh();
 });
 
-let selInput = null;
+let selectedInput = null;
 
 function toModelCoord(e) {
     return [ (e.offsetX - R) / K, -(e.offsetY - R) / K ];
@@ -17,27 +17,30 @@ function toModelCoord(e) {
 document.getElementById("canvas").addEventListener('mousedown', function(e) {
     for (let i = 0; i < EXPRS.length; i++) {
        if (EXPRS[i].isNear(...toModelCoord(e))) {
-           selInput = [inputA, inputB, inputC][i];           
+           selectedInput = [inputA, inputB, inputC][i];           
            //alert(new Complex(x, y).sub(expr.value).abs());
        }
     }
 });
 
 document.getElementById("canvas").addEventListener('mousemove', function(e) {
-    if (selInput) {
-        let [x,y] = toModelCoord(e);
-        let eqPos = selInput.value.indexOf('=');
-        let right = `${x.toFixed(2)} + ${y.toFixed(2)}i`;
+    let [x,y] = toModelCoord(e);
+    // set mouse pointer
+    this.style.cursor = EXPRS.some(e => e.isNear(x, y)) ? 'pointer' : 'auto';
+
+    if (selectedInput) {    
+        let eqPos = selectedInput.value.indexOf('=');
+        let rvalue = `${x.toFixed(2)} + ${y.toFixed(2)}i`;
         if (eqPos == -1)       
-            selInput.value = right;
+            selectedInput.value = rvalue;
         else 
-            selInput.value = selInput.value.slice(0, eqPos + 1) + " " + right;
+            selectedInput.value = selectedInput.value.slice(0, eqPos + 1) + " " + rvalue;
         refresh();
     }
     
 });
 document.getElementById("canvas").addEventListener('mouseup', function(e) {
-    selInput = null;
+    selectedInput = null;
 });
 
 function refresh() {

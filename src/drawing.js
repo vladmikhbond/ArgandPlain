@@ -15,23 +15,26 @@ function draw() {
 
    drawAxes(ctx);
 
-   ctx.lineWidth = 3;
+   ctx.lineWidth = 2;
    ctx.lineCap = 'round';
-   ctx.setLineDash([]);
    for (let e of EXPRS) {
-       if (e && e.value) {
-           ctx.strokeStyle = e.color;           
-           ctx.beginPath(); 
-           ctx.moveTo(0, 0); 
-           ctx.lineTo(e.value.re * K, e.value.im * K); 
-           ctx.stroke();
-       }
+       drawExpression(e, ctx)
    }
-
    drawSumOrMult(ctx);
-
    ctx.restore();
 }  
+
+function drawExpression(e, ctx) {
+    if (e && e.value) {
+        ctx.strokeStyle = e.color;           
+        ctx.beginPath(); 
+        ctx.moveTo(0, 0); 
+        let x = e.value.re * K, y = e.value.im * K;
+        ctx.lineTo(x, y);
+        ctx.arc(x, y, 2, 0, 2 * Math.PI); 
+        ctx.stroke();
+    }
+}
 
 function drawSumOrMult(ctx) {
    let [c0, c1, c2] = EXPRS.map(e => e.value);
@@ -79,4 +82,5 @@ function drawAxes(ctx) {
        ctx.lineTo(x, R); 
        ctx.stroke();   
    }
+   ctx.setLineDash([]);
 }

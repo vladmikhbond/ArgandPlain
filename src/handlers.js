@@ -11,9 +11,7 @@ range.addEventListener('change', function(e) {
 let selInput = null;
 
 function toModelCoord(e) {
-    return [
-        (e.offsetX - canvas.width / 2) / K,
-       -(e.offsetY - canvas.width / 2) / K ];
+    return [ (e.offsetX - R) / K, -(e.offsetY - R) / K ];
 }
 
 document.getElementById("canvas").addEventListener('mousedown', function(e) {
@@ -57,24 +55,3 @@ function refresh() {
     show();
     draw();
 }
-
-
-
-
-
-// ----------- main ------------------------
-const canvas = document.getElementById("canvas");
-canvas.height = canvas.width = 512;
-
-
-const R = canvas.width / 2; 
-const EXPRS = [null, null, null];
-
-let MAX = 2 ** (range.value | 0);
-let K  = R / MAX;
-
-
-setTimeout(refresh, 100);
-// ---------------------------------------
-
-

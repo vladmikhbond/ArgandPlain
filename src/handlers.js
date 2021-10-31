@@ -49,8 +49,9 @@ function refresh() {
     EXPRS[2] = new Expression(inputC.value, inputC.style.borderColor);
           
     for (let i = 0; i < EXPRS.length; i++) {
+        EXPRS[i].substitutionConst()
         for (let j = 0; j < i; j++) {
-            EXPRS[i].replace(EXPRS[j])
+            EXPRS[i].substitution(EXPRS[j])
         }
         EXPRS[i].eval();
     }

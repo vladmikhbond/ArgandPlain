@@ -6,7 +6,7 @@ function show() {
            let z = EXPRS[i].value; //.round(2).toString();
               
            res.innerHTML = `${z.re.toFixed(2)} + ${z.im.toFixed(2)}i &nbsp;&nbsp;&nbsp;       
-                            r=${z.abs().toFixed(2)}  fi=${z.arg().toFixed(2)} `;
+                            |z| = ${z.abs().toFixed(2)}  fi = ${(z.arg()*180/Math.PI).toFixed(0)}gr`;
         } else { 
             res.innerHTML = "n/a";
         }

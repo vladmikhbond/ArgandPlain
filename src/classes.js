@@ -28,6 +28,7 @@ class Expression {
        this.color = color;
        this.value = null;
    }
+   
 
    replace(other) {
        if (other.name) {

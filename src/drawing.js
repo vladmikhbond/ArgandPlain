@@ -1,8 +1,15 @@
 function show() {
    const ids = ["resA", "resB", "resC"];
    for (let i = 0; i < ids.length; i++) {
-       document.getElementById(ids[i]).innerHTML = 
-          EXPRS[i] && EXPRS[i].value ? EXPRS[i].value.round(2).toString() : "";
+        let res = document.getElementById(ids[i]);
+        if (EXPRS[i] && EXPRS[i].value) {
+           let z = EXPRS[i].value; //.round(2).toString();
+              
+           res.innerHTML = `${z.re.toFixed(2)} + ${z.im.toFixed(2)}i &nbsp;&nbsp;&nbsp;       
+                            r=${z.abs().toFixed(2)}  fi=${z.arg().toFixed(2)} `;
+        } else { 
+            res.innerHTML = "n/a";
+        }
    }
 }
 

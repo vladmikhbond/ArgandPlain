@@ -18,7 +18,6 @@ document.getElementById("canvas").addEventListener('mousedown', function(e) {
     for (let i = 0; i < EXPRS.length; i++) {
        if (EXPRS[i].isNear(...toModelCoord(e))) {
            selectedInput = [inputA, inputB, inputC][i];           
-           //alert(new Complex(x, y).sub(expr.value).abs());
        }
     }
 });

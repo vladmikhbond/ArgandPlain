@@ -1,17 +1,19 @@
 <html>
     <body>
+        <h2>Argand Plane</h2>
         <div style="margin-bottom: 6px;">            
-            <input type="text" id="inputA" style="width: 512px; border-color: blue;" value="X = (1 + i) ^ 0.5">
+            <input type="text" id="inputA" style="width: 512px; border-color: blue;" value="C = 1">
             <span id="resA"></span>
         </div>
         <div style="margin-bottom: 6px;">
-            <input type="text" id="inputB" style="width: 512px; border-color: green;" value="Y = 1 - i">
+            <input type="text" id="inputB" style="width: 512px; border-color: green;" value="Z = 1 - i">
             <span id="resB"></span>
         </div>
         <div style="margin-bottom: 6px;">
-            <input type="text" id="inputC" style="width: 512px; border-color: red;" value="X + Y">
+            <input type="text" id="inputC" style="width: 512px; border-color: red;" value="Z = Z^2 + C">
             <span id="resC"></span>
         </div>
+
         <canvas id="canvas" width="512" height="512" style="border: solid thin"></canvas>
         <div style="margin-bottom: 6px;">
             <input type="range" id="range" style="width: 512px;" min="1" max="5" value="2">

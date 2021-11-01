@@ -11,6 +11,7 @@ class Lexema {
     }
 }
 
+// Свойства: name, body, color, value = комплексное значение
 class Expression {
     constructor(line, color) {
         // parse line to name & body

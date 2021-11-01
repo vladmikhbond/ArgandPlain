@@ -47,7 +47,14 @@ function refresh() {
     EXPRS[0] = new Expression(inputA.value, inputA.style.borderColor);
     EXPRS[1] = new Expression(inputB.value, inputB.style.borderColor);
     EXPRS[2] = new Expression(inputC.value, inputC.style.borderColor);
-          
+    
+    // mandelbrot indicator
+    let e = EXPRS;
+    if (e[0].name && e[1].name && e[2].name && e[1].name == e[2].name &&
+        e[2].body.indexOf(e[0].name) > -1 && e[2].body.indexOf(e[1].name > -1) )
+        console.log("mandelbrot!!!");
+
+    // substitution      
     for (let i = 0; i < EXPRS.length; i++) {
         EXPRS[i].substitutionConst()
         for (let j = 0; j < i; j++) {
@@ -57,4 +64,7 @@ function refresh() {
     }
     show();
     draw();
+    //
+    
+
 }

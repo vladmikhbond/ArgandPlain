@@ -91,3 +91,32 @@ function drawAxes(ctx) {
    }
    ctx.setLineDash([]);
 }
+
+function drawMandelbrot(n, d) {
+    const D = d * K * 2;
+    
+   const ctx = canvas.getContext("2d");
+   ctx.clearRect(0, 0, canvas.width, canvas.height);
+   ctx.save();
+   ctx.translate(canvas.width / 2, canvas.height / 2);
+   ctx.scale(1, -1);
+   
+   drawAxes(ctx);
+   
+   for (let x = -2; x < 1; x += d) {
+      for (let y = -1; y < 1; y += d) {
+          let z = Complex.ZERO; 
+          let c = new Complex(x, y);
+          let i = 0;
+          for (; i < n && z.abs() < 2; i++) {
+              z = z.mul(z).add(c);
+          }
+          if (i == n) {
+              ctx.fillStyle = `rgb(${i},255,255)`;
+              ctx.fillRect(x * K - D/2, y * K - D/2, D, D);
+          }
+      }
+ 
+   }
+   ctx.restore();
+}

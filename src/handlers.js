@@ -8,13 +8,11 @@ range.addEventListener('change', function(e) {
     refresh();
 });
 
+// canvas mouse events ---------------------------------
+
 let selectedInput = null;
 
-function toModelCoord(e) {
-    return [ (e.offsetX - R) / K, -(e.offsetY - R) / K ];
-}
-
-document.getElementById("canvas").addEventListener('mousedown', function(e) {
+canvas.addEventListener('mousedown', function(e) {
     for (let i = 0; i < EXPRS.length; i++) {
        if (EXPRS[i].isNear(...toModelCoord(e))) {
            selectedInput = [inputA, inputB, inputC][i];           
@@ -22,7 +20,7 @@ document.getElementById("canvas").addEventListener('mousedown', function(e) {
     }
 });
 
-document.getElementById("canvas").addEventListener('mousemove', function(e) {
+canvas.addEventListener('mousemove', function(e) {
     let [x,y] = toModelCoord(e);
     // set mouse pointer
     this.style.cursor = EXPRS.some(e => e.isNear(x, y)) ? 'pointer' : 'auto';
@@ -38,9 +36,20 @@ document.getElementById("canvas").addEventListener('mousemove', function(e) {
     }
     
 });
-document.getElementById("canvas").addEventListener('mouseup', function(e) {
+
+canvas.addEventListener('mouseup', function(e) {
     selectedInput = null;
 });
+
+// ---------------------- mandelbrot  ----------------------------
+mandelbrotButton.addEventListener('click', function(e) {
+    const n = EXPRS[1].value.abs() | 0;
+    const d = EXPRS[2].value.abs();
+    drawMandelbrot(n, d);
+});
+
+// ------------------------------------------------------
+
 
 function refresh() {
     // creation
@@ -48,23 +57,34 @@ function refresh() {
     EXPRS[1] = new Expression(inputB.value, inputB.style.borderColor);
     EXPRS[2] = new Expression(inputC.value, inputC.style.borderColor);
     
-    // mandelbrot indicator
-    let e = EXPRS;
-    if (e[0].name && e[1].name && e[2].name && e[1].name == e[2].name &&
-        e[2].body.indexOf(e[0].name) > -1 && e[2].body.indexOf(e[1].name > -1) )
-        console.log("mandelbrot!!!");
-
-    // substitution      
-    for (let i = 0; i < EXPRS.length; i++) {
-        EXPRS[i].substitutionConst()
-        for (let j = 0; j < i; j++) {
-            EXPRS[i].substitution(EXPRS[j])
+    // mandelbrot fork
+    if (isMandelbrot(EXPRS)) 
+    {
+        divM.style.display = "block";
+        EXPRS.forEach(x => x.eval());
+    } 
+    else 
+    {
+        divM.style.display = "none";        
+        for (let i = 0; i < EXPRS.length; i++) {
+            // substitution      
+            EXPRS[i].substitutionConst()
+            for (let j = 0; j < i; j++) {
+                EXPRS[i].substitution(EXPRS[j])
+            }
+            // evalution      
+            EXPRS[i].eval();
         }
-        EXPRS[i].eval();
     }
     show();
     draw();
-    //
-    
+}
 
+// Utils ------------------------------------
+function toModelCoord(e) {
+    return [ (e.offsetX - R) / K, -(e.offsetY - R) / K ];
+}
+
+function isMandelbrot(e) {
+    return e[0].name && e[1].name && e[0].body.indexOf(e[0].name) > -1 ;        
 }

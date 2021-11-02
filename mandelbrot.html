@@ -1,32 +1,27 @@
 <html>
     <body>
-        <h2>Argand Plane</h2>
+        <h2>Mandelbrot</h2>
         <div style="margin-bottom: 6px;">            
             <input type="text" id="inputA" style="width: 512px; border-color: blue;" value="Z = Z^2 + C">
-            <span id="resA"></span>
         </div>
         <div style="margin-bottom: 6px;">
             <input type="text" id="inputB" style="width: 512px; border-color: green;" value="N = 100">
-            <span id="resB"></span>
         </div>
         <div style="margin-bottom: 6px;">
             <input type="text" id="inputC" style="width: 512px; border-color: red;" value="D = 0.01">
-            <span id="resC"></span>
         </div>
-        <div style="margin-bottom: 6px;display: none;" id="divM">
+        <div style="margin-bottom: 6px;" id="divM">
             <button id="mandelbrotButton">M</button>
         </div>
     
         <canvas id="canvas" width="512" height="512" style="border: solid thin"></canvas>
-        <div style="margin-bottom: 6px;">
-            <input type="range" id="range" style="width: 512px;" min="1" max="5" value="2">
-        </div>
+       
 
-        <script src="complex.min.js"></script>
+        <script src="lib/complex.min.js"></script>
         <script src="src/classes.js"></script>    
         <script src="src/model.js"></script>    
-        <script src="src/drawing.js"></script>    
-        <script src="src/handlers.js"></script>
-        <script src="src/main.js"></script>
+        <script src="src/Mandelbrot/drawing.js"></script>    
+        <script src="src/Mandelbrot/handlers.js"></script>
+        <script src="src/Mandelbrot/main.js"></script>
     </body>
 </html>

@@ -23,7 +23,7 @@ function lexicalAnalisys(input)
                 else if (c == '+') 
                    output.push(new Lexema('#'));  //  unary +
                 else
-                    output.push(new Lexema(c));
+                   output.push(new Lexema(c));
             } 
             else 
             {
@@ -146,22 +146,29 @@ function evalPoland(poland) {
 
 
 function test() {
-    function t(input, expected) {
+    function t(input, expRe, expIm) {
+        
         let a = lexicalAnalisys(input);
         let p = toPoland(a);
         let c = evalPoland(p);
-        if (c.toString() == expected) 
+        let exp = new Complex(expRe, expIm)
+        if (c.sub(exp).abs() < 1e-10)
             console.log('OK')
         else 
             console.log(input)
     }
 
-    t("-1.2 + +3.4i", "-1.2 + 3.4i");
-    t("3.4i", "3.4i"); 
-    t("((1-(2+3))*1)^(1+2)", "-63.99999999999998 + 2.3513218543629174e-14i");  
-    t("1+2i*3i-4/(5+6i)", "-5.327868852459017 + 0.3934426229508196i");   
+    t("0^(-2+-2i)", -2, -2);
+
+//     t("(0+0i)^(-2+-2i)", 0, 0);
+//     t("-1.2 + +3.4i", -1.2, 3.4);
+//     t("3.4i", 0, 3.4); 
+//     t("((1-(2+3))*1)^(1+2)", -64, 0)  //"-63.99999999999998 + 2.3513218543629174e-14i"
+//     t("1+2i*3i-4/(5+6i)", -5.32786885245901, 0.3934426229508196);     //"-5.327868852459017 + 0.3934426229508196i");   
+
 }
 test()
 
 
 
+// (0+0i)^(-2+-2i)

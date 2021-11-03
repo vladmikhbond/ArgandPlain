@@ -34,7 +34,7 @@ function drawAxes(ctx) {
    ctx.setLineDash([]);
 }
 
-function drawM(n, d) {
+function drawM(expr, n, d) {
     const D = d * K * 2;
     
    const ctx = canvas.getContext("2d");
@@ -45,14 +45,11 @@ function drawM(n, d) {
    
    drawAxes(ctx);
    
-   for (let x = -2; x < 1; x += d) {
-      for (let y = -1; y < 1; y += d) {
-          let z = Complex.ZERO; 
-          let c = new Complex(x, y);
-          let i = 0;
-          for (; i < n && z.abs() < 2; i++) {
-              z = z.mul(z).add(c);
-          }
+   for (let x = -MAX; x < MAX; x += d) {
+      for (let y = -MAX; y < MAX; y += d) {
+          //
+          let i = deep(x, y, expr, n);
+          //
           if (i == n) {
               ctx.fillStyle = `rgb(${i},255,255)`;
               ctx.fillRect(x * K - D/2, y * K - D/2, D, D);
@@ -61,4 +58,33 @@ function drawM(n, d) {
  
    }
    ctx.restore();
+}
+function deep(x, y, expr, n) {
+    let c = new Expression(`C=${x}+${y}i`); 
+    // substitute c in in expr
+    expr = expr.replace(c.name, "("+c.body+")"); 
+    let t = Complex.ZERO;
+    for (let i = 0; i < n; i++) {
+        let expr2 = expr.replace("z", `(${t.re}+${t.im}i)`); 
+        let z = new Expression(expr2);
+        z.eval();
+        if (!z.value) {
+           console.log(x, y)
+           return -1;
+        }
+        t = z.value;
+        if (t.abs() > 2) 
+           return i;
+    }
+    return n;   
+}
+
+function deep1(x, y, n) {
+    let z = Complex.ZERO; 
+    let c = new Complex(x, y);
+    let i = 0;
+    for (; i < n && z.abs() < 2; i++) {
+        z = z.mul(z).add(c);
+    }
+    return i;
 }

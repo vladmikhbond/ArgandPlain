@@ -6,11 +6,11 @@
 let selectedInput = null;
 
 canvas.addEventListener('mousedown', function(e) {
-    for (let i = 0; i < EXPRS.length; i++) {
-       if (EXPRS[i].isNear(...toModelCoord(e))) {
-           selectedInput = [inputA, inputB, inputC][i];           
-       }
-    }
+    // for (let i = 0; i < EXPRS.length; i++) {
+    //    if (EXPRS[i].isNear(...toModelCoord(e))) {
+    //        selectedInput = [inputA, inputB, inputC][i];           
+    //    }
+    // }
 });
 
 canvas.addEventListener('mousemove', function(e) {
@@ -37,9 +37,15 @@ canvas.addEventListener('mouseup', function(e) {
 // END canvas mouse events ---------------------------------
 
 mandelbrotButton.addEventListener('click', function(e) {
+    refresh();
+    const expr = EXPRS[0].body;
     const n = EXPRS[1].value.abs() | 0;
     const d = EXPRS[2].value.abs();
-    drawM(n, d);
+
+    let time1 = new Date().getTime();
+    drawM(expr, n, d);
+    let time2 = new Date().getTime();
+    alert((time2 - time1) / 1000);
 });
 
 
@@ -52,7 +58,6 @@ function refresh() {
     
     EXPRS.forEach(x => x.eval());
 
-    drawM();
 }
 
 // Utils ------------------------------------

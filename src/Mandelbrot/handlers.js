@@ -1,38 +1,13 @@
 
-
-
-// canvas mouse events ---------------------------------
-
-let selectedInput = null;
-
-canvas.addEventListener('mousedown', function(e) {
-    // for (let i = 0; i < EXPRS.length; i++) {
-    //    if (EXPRS[i].isNear(...toModelCoord(e))) {
-    //        selectedInput = [inputA, inputB, inputC][i];           
-    //    }
-    // }
-});
-
 canvas.addEventListener('mousemove', function(e) {
-    let [x,y] = toModelCoord(e);
-    // set mouse pointer
-    this.style.cursor = EXPRS.some(e => e.isNear(x, y)) ? 'pointer' : 'auto';
-
-    if (selectedInput) {    
-        let eqPos = selectedInput.value.indexOf('=');
-        let rvalue = `${x.toFixed(2)} + ${y.toFixed(2)}i`;
-        if (eqPos == -1)       
-            selectedInput.value = rvalue;
-        else 
-            selectedInput.value = selectedInput.value.slice(0, eqPos + 1) + " " + rvalue;
-        refresh();
-    }
-    
+   let [x,y] = toModelCoord(e);
+   const expr = EXPRS[0].body; 
+   let a = lexicalAnalisys(expr);
+   let poland = toPoland(a);
+   let level = mandelbrotLevel(x, y, 1000, poland);
+   resA.innerHTML = level.toString();
 });
 
-canvas.addEventListener('mouseup', function(e) {
-    selectedInput = null;
-});
 
 // END canvas mouse events ---------------------------------
 
@@ -45,7 +20,7 @@ mandelbrotButton.addEventListener('click', function(e) {
     let time1 = new Date().getTime();
     drawM(expr, n, d);
     let time2 = new Date().getTime();
-    alert((time2 - time1) / 1000);
+    console.log((time2 - time1) / 1000);
 });
 
 

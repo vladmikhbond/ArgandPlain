@@ -1,7 +1,8 @@
 class Lexema {
     constructor(tag, num) 
     {
-        this.tag = tag;  // (,  ),  +, -, *, /,  ^,  r,  i
+        // (,  ),  +, -, *, /,  ^,  r число,  i мним.число,  v переменная, ~ унар.минус, # унар.плюс 
+        this.tag = tag;  
         this.num = num;
     }
     toString() {
@@ -11,11 +12,11 @@ class Lexema {
     }
 }
 
-// Свойства: name, body, color, value = комплексное значение
+// Свойства: name, body, color, value - комплексное значение
 class Expression {
     constructor(line, color) {
         // parse line to name & body
-        let ss = line.toLowerCase().split('=');
+        let ss = line.split('=');
         if (ss.length == 2) {
             this.name = ss[0].trim();
             this.body = ss[1].trim();

@@ -34,8 +34,8 @@ function drawAxes(ctx) {
    ctx.setLineDash([]);
 }
 
-function drawM(expr, n, d) {
-    const D = d * K * 2;
+function drawM(expr, maxLevel, d) {
+   const D = d * K * 2;
     
    const ctx = canvas.getContext("2d");
    ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -43,48 +43,20 @@ function drawM(expr, n, d) {
    ctx.translate(canvas.width / 2, canvas.height / 2);
    ctx.scale(1, -1);
    
-   drawAxes(ctx);
-   
+   let a = lexicalAnalisys(expr);
+   let poland = toPoland(a);
    for (let x = -MAX; x < MAX; x += d) {
       for (let y = -MAX; y < MAX; y += d) {
-          //
-          let i = deep(x, y, expr, n);
-          //
-          if (i == n) {
-              ctx.fillStyle = `rgb(${i},255,255)`;
-              ctx.fillRect(x * K - D/2, y * K - D/2, D, D);
-          }
+         let level = mandelbrotLevel(x, y, maxLevel, poland);
+         let color = 255 * level/maxLevel; 
+         ctx.fillStyle = `rgb(${color},127,127)`;
+         ctx.fillRect(x * K - D/2, y * K - D/2, D, D);    
       }
  
    }
+   drawAxes(ctx);
    ctx.restore();
 }
-function deep(x, y, expr, n) {
-    let c = new Expression(`C=${x}+${y}i`); 
-    // substitute c in in expr
-    expr = expr.replace(c.name, "("+c.body+")"); 
-    let t = Complex.ZERO;
-    for (let i = 0; i < n; i++) {
-        let expr2 = expr.replace("z", `(${t.re}+${t.im}i)`); 
-        let z = new Expression(expr2);
-        z.eval();
-        if (!z.value) {
-           console.log(x, y)
-           return -1;
-        }
-        t = z.value;
-        if (t.abs() > 2) 
-           return i;
-    }
-    return n;   
-}
 
-function deep1(x, y, n) {
-    let z = Complex.ZERO; 
-    let c = new Complex(x, y);
-    let i = 0;
-    for (; i < n && z.abs() < 2; i++) {
-        z = z.mul(z).add(c);
-    }
-    return i;
-}
+
+

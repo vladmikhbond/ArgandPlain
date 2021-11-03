@@ -7,6 +7,7 @@ function lexicalAnalisys(input)
     const isOpenBracketOrOperator = x => "(+-*/^".indexOf(x) > -1;
     const isBracketOrOperator = x => "()+-*/^".indexOf(x) > -1;
     const isDigit = x => "01234.56789".indexOf(x) > -1;
+    const isVariable = x => 'A' <= x && x <= 'Z';
     
     input = input.replace(/\s/g, '');
     const output = []; 
@@ -24,7 +25,8 @@ function lexicalAnalisys(input)
                    output.push(new Lexema('#'));  //  unary +
                 else
                    output.push(new Lexema(c));
-            } 
+            }
+            // binary operation 
             else 
             {
                 if (nStr) {           
@@ -33,6 +35,8 @@ function lexicalAnalisys(input)
                 }
                 output.push(new Lexema(c));
             }
+        } else if (isVariable(c)) { 
+            output.push(new Lexema('v', c));           
         } else if (isDigit(c)) {
             nStr += c;
         } else if (c == 'i') {
@@ -107,7 +111,8 @@ function toPoland(input) {
     return output;
 }
 
-function evalPoland(poland) {
+// dict = {X: Complex1, Y: Complex2, ... }
+function evalPoland(poland, dict) {
     const stack = [];
     for (let pol of poland) {
         switch(pol.tag) {
@@ -117,11 +122,16 @@ function evalPoland(poland) {
         case 'i':
             stack.push(new Complex(0, pol.num));
             break;
+        case 'v':
+            if (!dict || !dict[pol.num])
+                throw new Error("wrong dictionary");
+            stack.push(dict[pol.num]);
+            break;
         case '+': case '-': case '/': case '*': case '^':
             let c2 = stack.pop();
             let c1 = stack.pop();
             if (!c1 || !c2) 
-                throw new Error("wrong poland expression")
+                throw new Error("wrong poland expression");
             switch (pol.tag) {
                 case '+': stack.push(c1.add(c2)); break;
                 case '-': stack.push(c1.sub(c2)); break;
@@ -144,13 +154,26 @@ function evalPoland(poland) {
     return stack[0];
 }
 
+function mandelbrotLevel(x, y, n, poland) 
+{   
+    let dict = {'Z': Complex.ZERO, 'C': new Complex(x, y)};
+    for (let i = 0; i < n; i++) {
+        if (dict['Z'].abs() > 2)
+            return i;
+        dict['Z'] = evalPoland(poland, dict);
+    }
+    return n;
+}
+
+
+
 
 function test() {
-    function t(input, expRe, expIm) {
+    function t(input, expRe, expIm, dict) {
         
         let a = lexicalAnalisys(input);
         let p = toPoland(a);
-        let c = evalPoland(p);
+        let c = evalPoland(p, dict);
         let exp = new Complex(expRe, expIm)
         if (c.sub(exp).abs() < 1e-10)
             console.log('OK')
@@ -158,11 +181,13 @@ function test() {
             console.log(input)
     }
 
-    t("0^(-2+-2i)", -2, -2);
+    t("3.4i * Z", 0, 0, {Z: Complex.ZERO});
+    t("-A * (B + C)", -1, -1, {A: Complex.ONE, B: Complex.ONE, C: Complex.I});
 
-//     t("(0+0i)^(-2+-2i)", 0, 0);
-//     t("-1.2 + +3.4i", -1.2, 3.4);
+//    t("0^(-2+-2i)", NaN, NaN);  // ошибка в Complex.js
+
 //     t("3.4i", 0, 3.4); 
+//     t("-1.2 + +3.4i", -1.2, 3.4);
 //     t("((1-(2+3))*1)^(1+2)", -64, 0)  //"-63.99999999999998 + 2.3513218543629174e-14i"
 //     t("1+2i*3i-4/(5+6i)", -5.32786885245901, 0.3934426229508196);     //"-5.327868852459017 + 0.3934426229508196i");   
 

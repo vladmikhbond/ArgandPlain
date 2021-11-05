@@ -6,13 +6,12 @@
             <span id="resA"></span>
         </div>
         <div style="margin-bottom: 6px;">
-            <input type="text" id="inputB" style="width: 512px; border-color: green;" value="N = 100">
+            <input type="text" id="inputB" style="width: 512px; border-color: green;" value="Max Level = 100">
+            <span id="resB"></span>
         </div>
         <div style="margin-bottom: 6px;">
-            <input type="text" id="inputC" style="width: 512px; border-color: red;" value="D = 0.01">
-        </div>
-        <div style="margin-bottom: 6px;" id="divM">
-            <button id="mandelbrotButton">M</button>
+            <input type="text" id="inputC" style="width: 512px; border-color: red;" value="Enlargement = 4">
+            <span id="resC"></span>
         </div>
     
         <canvas id="canvas" width="512" height="512" style="border: solid thin"></canvas>
@@ -21,6 +20,7 @@
         <script src="lib/complex.min.js"></script>
         <script src="src/classes.js"></script>    
         <script src="src/model.js"></script>    
+        <script src="src/Mandelbrot/model.js"></script>    
         <script src="src/Mandelbrot/drawing.js"></script>    
         <script src="src/Mandelbrot/handlers.js"></script>
         <script src="src/Mandelbrot/main.js"></script>

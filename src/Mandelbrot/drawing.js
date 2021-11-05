@@ -16,43 +16,41 @@ function showM() {
 
 function drawAxes(ctx) {
    ctx.lineWidth = 0.5;
-   for (let x = -R; x < R; x += K) {
-       if (x) {
-           ctx.strokeStyle =  "gray";
-           ctx.setLineDash([5, 10]);
-       } else {
-           ctx.strokeStyle =  "black";
-           ctx.setLineDash([]);
-       }
-       ctx.beginPath();
-       ctx.moveTo(-R, x); 
-       ctx.lineTo(R, x); 
-       ctx.moveTo(x, -R); 
-       ctx.lineTo(x, R); 
-       ctx.stroke();   
-   }
-   ctx.setLineDash([]);
+   ctx.strokeStyle =  "black";
+
+   ctx.beginPath();
+   ctx.moveTo(-canvasR, 0); 
+   ctx.lineTo(canvasR, 0); 
+   ctx.moveTo(0, -canvasR); 
+   ctx.lineTo(0, canvasR); 
+   ctx.stroke();   
 }
 
-function drawM(expr, maxLevel, d) {
-   const D = d * K * 2;
+function draw(expr) {
+   
+   const K  = canvasR / AREA.r;
+   const d = 2 / K;
+   const D = d * K;
     
    const ctx = canvas.getContext("2d");
    ctx.clearRect(0, 0, canvas.width, canvas.height);
    ctx.save();
-   ctx.translate(canvas.width / 2, canvas.height / 2);
+   ctx.translate(canvasR, canvasR);
    ctx.scale(1, -1);
    
    let a = lexicalAnalisys(expr);
    let poland = toPoland(a);
-   for (let x = -MAX; x < MAX; x += d) {
-      for (let y = -MAX; y < MAX; y += d) {
-         let level = mandelbrotLevel(x, y, maxLevel, poland);
-         let color = 255 * level/maxLevel; 
+   let levels = getLevels(poland, d);
+   
+   let i = 0;
+   for (let x = AREA.x1; x < AREA.x2; x += d) {
+      for (let y = AREA.y1; y < AREA.y2; y += d) {
+         let color = 255 * levels[i++]/MAX_LEVEL; 
          ctx.fillStyle = `rgb(${color},127,127)`;
-         ctx.fillRect(x * K - D/2, y * K - D/2, D, D);    
+         let xx = (x - AREA.x) * K - D/2; 
+         let yy = (y - AREA.y) * K - D/2;
+         ctx.fillRect(xx, yy, D, D);    
       }
- 
    }
    drawAxes(ctx);
    ctx.restore();

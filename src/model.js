@@ -154,18 +154,6 @@ function evalPoland(poland, dict) {
     return stack[0];
 }
 
-function mandelbrotLevel(x, y, n, poland) 
-{   
-    let dict = {'Z': Complex.ZERO, 'C': new Complex(x, y)};
-    for (let i = 0; i < n; i++) {
-        if (dict['Z'].abs() > 2)
-            return i;
-        dict['Z'] = evalPoland(poland, dict);
-    }
-    return n;
-}
-
-
 
 
 function test() {

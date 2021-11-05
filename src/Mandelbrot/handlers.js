@@ -1,41 +1,54 @@
+inputA.addEventListener('change', refresh);
+inputB.addEventListener('change', refresh);
+inputC.addEventListener('change', refresh);
+
+canvas.addEventListener('contextmenu', event => event.preventDefault());
+
+canvas.addEventListener('mousedown', function(e) {    
+    if  (e.button == 2) {    // 2 - right button
+        let [x,y] = toModelCoord(e);
+        AREA.x = x; 
+        AREA.y = y; 
+        AREA.r /= ENLAG;
+        refresh();
+    }  
+});
 
 canvas.addEventListener('mousemove', function(e) {
-   let [x,y] = toModelCoord(e);
-   const expr = EXPRS[0].body; 
-   let a = lexicalAnalisys(expr);
-   let poland = toPoland(a);
-   let level = mandelbrotLevel(x, y, 1000, poland);
-   resA.innerHTML = level.toString();
-});
+    let [x,y] = toModelCoord(e);
+    resA.innerHTML = `C = ${x.toFixed(5)} + ${y.toFixed(5)}i`;
 
-
-// END canvas mouse events ---------------------------------
-
-mandelbrotButton.addEventListener('click', function(e) {
-    refresh();
-    const expr = EXPRS[0].body;
-    const n = EXPRS[1].value.abs() | 0;
-    const d = EXPRS[2].value.abs();
-
-    let time1 = new Date().getTime();
-    drawM(expr, n, d);
-    let time2 = new Date().getTime();
-    console.log((time2 - time1) / 1000);
-});
-
+    let expr = EXPRS[0].body; 
+    let a = lexicalAnalisys(expr);
+    let poland = toPoland(a);
+    let ML = MAX_LEVEL * 10;
+    let level = getDeepLevel(x, y, poland, ML);
+    let eq = level == ML ? ">" : "=";    
+    resB.innerHTML = `Level ${eq} ${level}`;
+ });
+ 
 
 
 function refresh() {
-    // creation
+   
     EXPRS[0] = new Expression(inputA.value, inputA.style.borderColor);
     EXPRS[1] = new Expression(inputB.value, inputB.style.borderColor);
     EXPRS[2] = new Expression(inputC.value, inputC.style.borderColor);
-    
     EXPRS.forEach(x => x.eval());
+    
+    const expr = EXPRS[0].body;
+    MAX_LEVEL = EXPRS[1].value.abs() | 0;
+    ENLAG = EXPRS[2].value.abs();
 
+    let t = new Date().getTime();
+
+    draw(expr);
+    
+    resC.innerHTML = (new Date().getTime() - t) / 1000 + "sec";
 }
 
 // Utils ------------------------------------
 function toModelCoord(e) {
-    return [ (e.offsetX - R) / K, -(e.offsetY - R) / K ];
+    const K  = canvasR / AREA.r;
+    return [ e.offsetX/K + AREA.x1, (2 * canvasR - e.offsetY)/K + AREA.y1 ];
 }

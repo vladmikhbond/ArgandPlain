@@ -19,18 +19,46 @@ function drawAxes(ctx) {
    ctx.strokeStyle =  "black";
 
    ctx.beginPath();
-   ctx.moveTo(-canvasR, 0); 
-   ctx.lineTo(canvasR, 0); 
-   ctx.moveTo(0, -canvasR); 
-   ctx.lineTo(0, canvasR); 
+   // Ox
+   ctx.moveTo(0, canvasR); 
+   ctx.lineTo(2*canvasR, canvasR); 
+   // Oy
+   ctx.moveTo(canvasR, 0); 
+   ctx.lineTo(canvasR, 2 * canvasR); 
    ctx.stroke();   
 }
 
-function draw(expr) {
+function draw(levels, quol) {
+   const ctx = canvas.getContext("2d");
+   ctx.clearRect(0, 0, canvas.width, canvas.height);
+   let i = 0;
+   let q = quol / 2;
+   for (let x = 0; x < 2 * canvasR; x += quol) {
+      for (let y = 0; y < 2 * canvasR; y += quol) {
+         let color = 255 * levels[i++]/MAX_LEVEL; 
+         ctx.fillStyle = `rgb(${color},127,127)`;        
+         ctx.fillRect(x - q, 2 * canvasR - y - q, quol, quol);    
+      }
+   }
+   drawAxes(ctx);
+}
+
+function drawCursor(event) {
+   const ctx = canvas.getContext("2d");
+   let r = canvasR / ENLAG;
+   ctx.strokeStyle = "gray";
+   ctx.strokeRect(event.offsetX - r, event.offsetY - r, 2 * r, 2 * r);    
+}
+
+
+
+
+// запасной вариант рисования
+function draw111(levels, quol) {
    
    const K  = canvasR / AREA.r;
-   const d = 2 / K;
-   const D = d * K;
+   const d = quol / K;
+
     
    const ctx = canvas.getContext("2d");
    ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -38,23 +66,19 @@ function draw(expr) {
    ctx.translate(canvasR, canvasR);
    ctx.scale(1, -1);
    
-   let a = lexicalAnalisys(expr);
-   let poland = toPoland(a);
-   let levels = getLevels(poland, d);
-   
    let i = 0;
+   let q = quol / 2;
    for (let x = AREA.x1; x < AREA.x2; x += d) {
       for (let y = AREA.y1; y < AREA.y2; y += d) {
          let color = 255 * levels[i++]/MAX_LEVEL; 
          ctx.fillStyle = `rgb(${color},127,127)`;
-         let xx = (x - AREA.x) * K - D/2; 
-         let yy = (y - AREA.y) * K - D/2;
-         ctx.fillRect(xx, yy, D, D);    
+         let xx = (x - AREA.x) * K - q; 
+         let yy = (y - AREA.y) * K - q;
+         ctx.fillRect(xx, yy, quol, quol);    
       }
    }
    drawAxes(ctx);
    ctx.restore();
 }
-
 
 

@@ -4,13 +4,16 @@ inputC.addEventListener('change', refresh);
 
 canvas.addEventListener('contextmenu', event => event.preventDefault());
 
+const step = 2;
+let levels = null;
+
+let flag = false;
+
 canvas.addEventListener('mousedown', function(e) {    
-    if  (e.button == 2) {    // 2 - right button
-        let [x,y] = toModelCoord(e);
-        AREA.x = x; 
-        AREA.y = y; 
-        AREA.r /= ENLAG;
-        refresh();
+    if  (e.button == 2) {        
+        flag = true;
+        draw(levels, step);
+        drawCursor(e);
     }  
 });
 
@@ -25,8 +28,24 @@ canvas.addEventListener('mousemove', function(e) {
     let level = getDeepLevel(x, y, poland, ML);
     let eq = level == ML ? ">" : "=";    
     resB.innerHTML = `Level ${eq} ${level}`;
- });
+    // rectangle around cursor
+    if (flag) {
+        draw(levels, step);
+        drawCursor(e);
+    }
+});
  
+canvas.addEventListener('mouseup', function(e) {
+    if  (flag && e.button == 2) {    // 2 - right button
+        let [x,y] = toModelCoord(e);
+        AREA.x = x; 
+        AREA.y = y; 
+        AREA.r /= ENLAG;
+        refresh();
+        flag = false;
+    }
+}); 
+
 
 
 function refresh() {
@@ -40,9 +59,11 @@ function refresh() {
     MAX_LEVEL = EXPRS[1].value.abs() | 0;
     ENLAG = EXPRS[2].value.abs();
 
+
     let t = new Date().getTime();
 
-    draw(expr);
+    levels = getLevels(expr, step);
+    draw(levels, step);
     
     resC.innerHTML = (new Date().getTime() - t) / 1000 + "sec";
 }

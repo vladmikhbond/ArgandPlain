@@ -69,7 +69,3 @@ function refresh() {
 }
 
 // Utils ------------------------------------
-function toModelCoord(e) {
-    const K  = canvasR / AREA.r;
-    return [ e.offsetX/K + AREA.x1, (2 * canvasR - e.offsetY)/K + AREA.y1 ];
-}

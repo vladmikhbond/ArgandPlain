@@ -36,3 +36,14 @@ function getDeepLevel(x, y, poland, maxLevel)
     }
     return maxLevel;
 }
+
+
+function toModelCoord(e) {
+    const K  = canvasR / AREA.r;
+    return [ e.offsetX/K + AREA.x1, (2 * canvasR - e.offsetY)/K + AREA.y1 ];
+}
+function toCanvasCoord(x, y) {
+    const K  = canvasR / AREA.r;
+    return [ K * (x - AREA.x1),  2 * canvasR - K * (y - AREA.y1) ];
+}
+//

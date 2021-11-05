@@ -1,5 +1,9 @@
-function getLevels(poland, d) 
+function getLevels(expr, step) 
 { 
+    const d = step *  AREA.r / canvasR;
+    let anal = lexicalAnalisys(expr);
+    let poland = toPoland(anal);
+
     let levels = [];
     let x, y;
     for (x = AREA.x1; x < AREA.x2; x += d) {

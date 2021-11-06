@@ -13,15 +13,18 @@
             <input type="text" id="inputC" style="width: 512px; border-color: red;" value="A + B">
             <span id="resC"></span>
         </div>
-    
+        
+        <div><a href="mandelbrot.html">Mandelbrot</a></div>
+
         <canvas id="canvas" width="512" height="512" style="border: solid thin"></canvas>
+
         <div style="margin-bottom: 6px;">
             <input type="range" id="range" style="width: 512px;" min="1" max="5" value="2">
         </div>
-
+        
         <script src="lib/complex.min.js"></script>
-        <script src="src/classes.js"></script>    
-        <script src="src/model.js"></script>    
+        <script src="src/common/classes.js"></script>    
+        <script src="src/common/model.js"></script>    
         <script src="src/Argand/drawing.js"></script>    
         <script src="src/Argand/handlers.js"></script>
         <script src="src/Argand/main.js"></script>

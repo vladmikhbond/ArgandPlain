@@ -1,6 +1,6 @@
 function getLevels(expr, step) 
 { 
-    const d = step *  AREA.r / canvasR;
+    const d = step *  AREA.r / CANVAS_R;
     let anal = lexicalAnalisys(expr);
     let poland = toPoland(anal);
 
@@ -39,11 +39,12 @@ function getDeepLevel(x, y, poland, maxLevel)
 
 
 function toModelCoord(e) {
-    const K  = canvasR / AREA.r;
-    return [ e.offsetX/K + AREA.x1, (2 * canvasR - e.offsetY)/K + AREA.y1 ];
+    const k  = CANVAS_R / AREA.r;
+    return [ e.offsetX/k + AREA.x1, (2 * CANVAS_R - e.offsetY)/k + AREA.y1 ];
 }
+
 function toCanvasCoord(x, y) {
-    const K  = canvasR / AREA.r;
-    return [ K * (x - AREA.x1),  2 * canvasR - K * (y - AREA.y1) ];
+    const k  = CANVAS_R / AREA.r;
+    return [ k * (x - AREA.x1),  2 * CANVAS_R - k * (y - AREA.y1) ];
 }
 //

@@ -9,24 +9,21 @@ const quolityStep = 2;
 let levelsMap = null;
 let hasTarget = false;
 
-canvas.addEventListener('mousedown', function(e) {    
-    if  (e.button == 2) {  // 2 - right button       
-        hasTarget = true;
-        draw(levelsMap, quolityStep);
-        drawCursor(e);
-    }  
+canvas.addEventListener('mousedown', function(e) {         
+    hasTarget = true;
+    drawCursor(e);
 });
 
 canvas.addEventListener('mousemove', function(e) {
     showCurrents(e);
     if (hasTarget) {
-        draw(levelsMap, quolityStep);
+        pixelsToCanvas();
         drawCursor(e);
     }
 });
  
 canvas.addEventListener('mouseup', function(e) {
-    if  (hasTarget && e.button == 2) { 
+    if (hasTarget) { 
         enlarge(e);
     }
 }); 

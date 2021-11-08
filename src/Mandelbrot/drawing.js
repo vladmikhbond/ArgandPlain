@@ -28,6 +28,7 @@ function draw(levels, quol) {
       }
    }
    drawAxes(ctx);
+   pixelsFromCanvas(ctx);
 }
 
 function drawCursor(event) {
@@ -37,7 +38,16 @@ function drawCursor(event) {
    ctx.strokeRect(event.offsetX - r, event.offsetY - r, 2 * r, 2 * r);    
 }
 
+var canvasImageData;
 
+function pixelsFromCanvas(ctx) {
+   canvasImageData = ctx.createImageData(canvas.width, canvas.height);
+   canvasImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+}
 
+function pixelsToCanvas() {
+   const ctx = canvas.getContext("2d");
+   ctx.putImageData(canvasImageData, 0, 0);
+}
 
 

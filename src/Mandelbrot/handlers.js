@@ -17,7 +17,7 @@ canvas.addEventListener('mousedown', function(e) {
 canvas.addEventListener('mousemove', function(e) {
     showCurrents(e);
     if (hasTarget) {
-        pixelsToCanvas();
+        imageToCanvas();
         drawCursor(e);
     }
 });
@@ -29,7 +29,8 @@ canvas.addEventListener('mouseup', function(e) {
 }); 
 
 function showCurrents(event) {
-    let [x,y] = toModelCoord(event);
+    let [x, y] = [event.offsetX, event.offsetY];
+    [x, y] = toModelCoord(x, y);
     resA.innerHTML = `C = ${x.toFixed(8)} + ${y.toFixed(8)}i`;
 
     let expr = EXPRS[0].body; 
@@ -43,7 +44,8 @@ function showCurrents(event) {
 
 function enlarge(event) {
     if (AREA.r / ENLAG > 1e-14) {
-        let [x,y] = toModelCoord(event);
+        let [x, y] = [event.offsetX, event.offsetY];
+        [x, y] = toModelCoord(x, y);
         AREA.x = x; 
         AREA.y = y; 
         AREA.r /= ENLAG;   
@@ -73,3 +75,7 @@ function refresh()
     t = (new Date().getTime() - t) / 1000;
     resC.innerHTML = `T = ${t}"  Scale = ${AREA.pow2}`;
 }
+
+canvas.addEventListener('touchstart', function(ev) {
+    console.log(111111111111)
+});

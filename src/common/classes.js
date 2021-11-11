@@ -61,6 +61,6 @@ class Expression {
     }
 
     isNear(x, y) { 
-        return new Complex(x, y).sub(this.value).abs() < 5/K; 
+        return new Complex(x, y).sub(this.value).abs() < 0.1; 
     }
 }

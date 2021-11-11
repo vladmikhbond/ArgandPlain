@@ -1,15 +1,17 @@
 const canvas = document.getElementById("canvas");
-canvas.height = canvas.width = 512;
-inputA.style.width = inputB.style.width = inputC.style.width = 256;
-resA.style.width = resB.style.width = resC.style.width = 128;
 
-const R = canvas.width / 2; 
+const CANVAS_R = canvas.width / 2; 
+const AREA = {x: 0, y: 0, // center of area
+   r: 2**range.value,                  // radius of area
+   get x1() { return this.x - this.r}, get x2() { return this.x + this.r}, 
+   get y1() { return this.y - this.r}, get y2() { return this.y + this.r},
+   get pow2() {return this.r / 2}
+};
+
 const EXPRS = [null, null, null];
 
-let MAX = 2 ** (range.value | 0);
-let K  = R / MAX;
 
-setTimeout(refresh, 100);
+setTimeout(refresh, 10);
 
 
 

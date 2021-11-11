@@ -38,13 +38,5 @@ function getDeepLevel(x, y, poland, maxLevel)
 }
 
 
-function toModelCoord(x, y) {
-    const k  = CANVAS_R / AREA.r;
-    return [ x/k + AREA.x1, (2 * CANVAS_R - y)/k + AREA.y1 ];
-}
 
-function toCanvasCoord(x, y) {
-    const k  = CANVAS_R / AREA.r;
-    return [ k * (x - AREA.x1),  2 * CANVAS_R - k * (y - AREA.y1) ];
-}
 //

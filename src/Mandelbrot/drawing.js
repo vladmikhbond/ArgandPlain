@@ -31,13 +31,15 @@ function draw(levelMap, quol) {
    imageFromCanvas(ctx);
 }
 
-function drawCursor(x, y) {
+function drawTargetCursor(x, y) {
    const ctx = canvas.getContext("2d");
    ctx.strokeStyle = "black";
    let r = CANVAS_R / ENLAG;
    ctx.strokeRect(x - r, y - r, 2 * r, 2 * r);    
 }
-//---------------------------------------------------------------
+
+//----------pixel image suite -----------------------------
+
 var canvasImageData;
 
 function imageFromCanvas(ctx) {

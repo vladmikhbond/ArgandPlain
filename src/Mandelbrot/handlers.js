@@ -1,56 +1,51 @@
-inputA.addEventListener('change', refresh);
-inputB.addEventListener('change', refresh);
-inputC.addEventListener('change', refresh);
-
-canvas.addEventListener('contextmenu', event => event.preventDefault());
+// MANDELBROT
 
 // local globals
 const quolityStep = 2;
 let levelsMap = null;
 let hasTarget = false;
 
-canvas.addEventListener('mousedown', f1);
-canvas.addEventListener('touchstart', f1);
 
-function f1(e) {         
+inputA.addEventListener('change', refresh);
+inputB.addEventListener('change', refresh);
+inputC.addEventListener('change', refresh);
+
+canvas.addEventListener('contextmenu', event => event.preventDefault());
+
+canvas.addEventListener('mousedown', startListener);
+canvas.addEventListener('touchstart', startListener);
+
+function startListener(e) {    
+    e.preventDefault();
     hasTarget = true;
     let [x,y] = eventCoord(e);
-    drawCursor(x, y);
+    drawTargetCursor(x, y);
 };
 
-function eventCoord(e) {
-    switch (e.constructor.name) {
-        case "MouseEvent":
-            return [e.offsetX, e.offsetY];
-        case "TouchEvent":            
-            let x = e.changedTouches[0].clientX - e.target.offsetLeft;
-            let y = e.changedTouches[0].clientY - e.target.offsetTop;            
-            return [x, y];
-    }
-    throw Error("Bad event name")
-}
+canvas.addEventListener('mousemove', moveListener)
+canvas.addEventListener('touchmove', moveListener);
 
-canvas.addEventListener('mousemove', f2)
-canvas.addEventListener('touchmove', f2);
-
-function f2 (e) {
-    showCurrents(e);
+function moveListener (e) {
+    e.preventDefault();
+    let [x,y] = eventCoord(e);
+    showCurrents(x, y);
     if (hasTarget) {
-        imageToCanvas();
-        let [x,y] = eventCoord(e);
-        drawCursor(x, y);    
+        imageToCanvas();        
+        drawTargetCursor(x, y);    
     }
 }
  
-canvas.addEventListener('mouseup', f3);
-canvas.addEventListener('touchend', f3);
+canvas.addEventListener('mouseup', endListener);
+canvas.addEventListener('touchend', endListener);
 
-function f3(e) {
+function endListener(e) {
+
     if (hasTarget) { 
         let [x,y] = eventCoord(e);
-        drawCursor(x, y);
+        drawTargetCursor(x, y);
         enlarge(x, y);
     }
+    console.log(e.constructor.name) ///////////////
 } 
 
 function showCurrents(x, y) {

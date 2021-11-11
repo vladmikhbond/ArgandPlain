@@ -1,10 +1,11 @@
+// ARGAND
+
 inputA.addEventListener('change', refresh);
 inputB.addEventListener('change', refresh);
 inputC.addEventListener('change', refresh);
 
 range.addEventListener('change', function(e) {
-    MAX = 2 ** (range.value | 0);
-    K  = R / MAX;
+    AREA.r = 2 ** (range.value | 0);
     refresh();
 });
 
@@ -12,16 +13,24 @@ range.addEventListener('change', function(e) {
 
 let selectedInput = null;
 
-canvas.addEventListener('mousedown', function(e) {
+canvas.addEventListener('contextmenu', event => event.preventDefault());
+
+canvas.addEventListener('mousedown', startListener);
+canvas.addEventListener('touchstart', startListener);
+
+function startListener(e) {    
+    let [x, y] = eventCoord(e);
     for (let i = 0; i < EXPRS.length; i++) {
-       if (EXPRS[i].isNear(...toModelCoord(e))) {
+       if (EXPRS[i].isNear(...toModelCoord(x, y))) {
            selectedInput = [inputA, inputB, inputC][i];           
        }
     }
-});
+    console.log("start")  ////////////////////////
+}
 
 canvas.addEventListener('mousemove', function(e) {
-    let [x,y] = toModelCoord(e);
+    let [x, y] = eventCoord(e);
+    [x,y] = toModelCoord(x, y);
     // set mouse pointer
     this.style.cursor = EXPRS.some(e => e.isNear(x, y)) ? 'pointer' : 'auto';
 
@@ -34,11 +43,12 @@ canvas.addEventListener('mousemove', function(e) {
             selectedInput.value = selectedInput.value.slice(0, eqPos + 1) + " " + rvalue;
         refresh();
     }
-    
+    console.log("move")  ////////////////////////
 });
 
 canvas.addEventListener('mouseup', function(e) {
     selectedInput = null;
+    console.log("end")  ////////////////////////
 });
 
 
@@ -65,8 +75,4 @@ function refresh() {
     draw();
 }
 
-// Utils ------------------------------------
-function toModelCoord(e) {
-    return [ (e.offsetX - R) / K, -(e.offsetY - R) / K ];
-}
 

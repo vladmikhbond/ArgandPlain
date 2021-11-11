@@ -154,8 +154,32 @@ function evalPoland(poland, dict) {
     return stack[0];
 }
 
+// ---------------- coordinate suit ------------------------------
+
+function eventCoord(e) {
+    switch (e.constructor.name) {
+        case "MouseEvent":
+            return [e.offsetX, e.offsetY];
+        case "TouchEvent":            
+            let x = e.changedTouches[0].clientX - e.target.offsetLeft;
+            let y = e.changedTouches[0].clientY - e.target.offsetTop;            
+            return [x, y];
+    }
+    throw Error("Bad event name")
+}
+
+function toModelCoord(x, y) {
+    const k  = CANVAS_R / AREA.r;
+    return [ x/k + AREA.x1, (2 * CANVAS_R - y)/k + AREA.y1 ];
+}
+
+function toCanvasCoord(x, y) {
+    const k  = CANVAS_R / AREA.r;
+    return [ k * (x - AREA.x1),  2 * CANVAS_R - k * (y - AREA.y1) ];
+}
 
 
+////////////////////////////////////////////////////////////////////
 function test() {
     function t(input, expRe, expIm, dict) {
         

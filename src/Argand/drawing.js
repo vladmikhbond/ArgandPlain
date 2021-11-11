@@ -15,28 +15,24 @@ function show() {
 
 function draw() {
    const ctx = canvas.getContext("2d");
-   ctx.clearRect(0, 0, canvas.width, canvas.height);
-   ctx.save();
-   ctx.translate(canvas.width / 2, canvas.height / 2);
-   ctx.scale(1, -1);
-
+   ctx.clearRect(0, 0, canvas.width, canvas.height); 
    drawAxes(ctx);
 
    ctx.lineWidth = 2;
    ctx.lineCap = 'round';
-   for (let e of EXPRS) {
-       drawExpression(e, ctx)
+   for (let expr of EXPRS) {
+       drawExpression(expr, ctx);
    }
    drawSumOrMult(ctx);
-   ctx.restore();
 }  
 
-function drawExpression(e, ctx) {
-    if (e && e.value) {
-        ctx.strokeStyle = e.color;           
+function drawExpression(expr, ctx) {
+    if (expr && expr.value) {
+        let [x0, y0] = toCanvasCoord(0, 0);
+        let [x, y] = toCanvasCoord(expr.value.re, expr.value.im);
+        ctx.strokeStyle = expr.color;           
         ctx.beginPath(); 
-        ctx.moveTo(0, 0); 
-        let x = e.value.re * K, y = e.value.im * K;
+        ctx.moveTo(x0, y0); 
         ctx.lineTo(x, y);
         ctx.arc(x, y, 2, 0, 2 * Math.PI); 
         ctx.stroke();
@@ -44,79 +40,72 @@ function drawExpression(e, ctx) {
 }
 
 function drawSumOrMult(ctx) {
-   let [c0, c1, c2] = EXPRS.map(e => e.value);
-   if (!(c0 && c1 && c2))
+   let [c1, c2, c3] = EXPRS.map(e => e.value);
+   if (!(c1 && c2 && c3))
        return;
-   let x0 = c0.re * K, y0 = c0.im * K;
-   let x1 = c1.re * K, y1 = c1.im * K;
-   let x2 = c2.re * K, y2 = c2.im * K;
+    let [x1, y1] =  toCanvasCoord(c1.re, c1.im);
+    let [x2, y2] =  toCanvasCoord(c2.re, c2.im);
+    let [x3, y3] =  toCanvasCoord(c3.re, c3.im);
+    let [x0, y0] =  toCanvasCoord(0, 0);    
+    let [xOne, yOne] =  toCanvasCoord(1, 0);
+
    ctx.fillStyle = "rgba(170, 51, 51, .25)";
-   if (c2.equals(c0.add(c1))) {
+   if (c3.equals(c1.add(c2))) {
        ctx.beginPath(); 
-       ctx.moveTo(0, 0); 
-       ctx.lineTo(x0, y0);
-       ctx.lineTo(x2, y2);
+       ctx.moveTo(x0, y0); 
        ctx.lineTo(x1, y1);
-       ctx.fill()
-   } else if (c2.equals(c0.mul(c1))) {
+       ctx.lineTo(x3, y3);
+       ctx.lineTo(x2, y2);
+       ctx.fill();
+   } else if (c3.equals(c1.mul(c2))) {
        ctx.beginPath(); 
-       ctx.moveTo(0, 0); 
-       ctx.lineTo(K, 0);
-       ctx.lineTo(x0, y0);
+       ctx.moveTo(x0, y0); 
+       ctx.lineTo(xOne, yOne);
+       ctx.lineTo(x1, y1);
        ctx.fill();
        ctx.beginPath(); 
-       ctx.moveTo(0, 0); 
-       ctx.lineTo(x1, y1);
+       ctx.moveTo(x0, y0); 
        ctx.lineTo(x2, y2);
+       ctx.lineTo(x3, y3);
        ctx.fill();
    }
 }
 
 function drawAxes(ctx) {
-   ctx.lineWidth = 0.5;
-   for (let x = -R; x < R; x += K) {
-       if (x) {
-           ctx.strokeStyle =  "gray";
-           ctx.setLineDash([5, 10]);
-       } else {
-           ctx.strokeStyle =  "black";
-           ctx.setLineDash([]);
-       }
-       ctx.beginPath();
-       ctx.moveTo(-R, x); 
-       ctx.lineTo(R, x); 
-       ctx.moveTo(x, -R); 
-       ctx.lineTo(x, R); 
-       ctx.stroke();   
-   }
-   ctx.setLineDash([]);
-}
-
-function drawMandelbrot(n, d) {
-    const D = d * K * 2;
-    
-   const ctx = canvas.getContext("2d");
-   ctx.clearRect(0, 0, canvas.width, canvas.height);
-   ctx.save();
-   ctx.translate(canvas.width / 2, canvas.height / 2);
-   ctx.scale(1, -1);
-   
-   drawAxes(ctx);
-   
-   for (let x = -2; x < 1; x += d) {
-      for (let y = -1; y < 1; y += d) {
-          let z = Complex.ZERO; 
-          let c = new Complex(x, y);
-          let i = 0;
-          for (; i < n && z.abs() < 2; i++) {
-              z = z.mul(z).add(c);
-          }
-          if (i == n) {
-              ctx.fillStyle = `rgb(${i},255,255)`;
-              ctx.fillRect(x * K - D/2, y * K - D/2, D, D);
-          }
-      }
+    ctx.lineWidth = 0.5;
+    ctx.strokeStyle =  "black";
+    let [x0, y0] = toCanvasCoord(0, 0);
+    ctx.beginPath();
+    //
+    ctx.moveTo(0, y0); 
+    ctx.lineTo(2 * CANVAS_R, y0); 
+    //
+    ctx.moveTo(x0, 0); 
+    ctx.lineTo(x0, 2 * CANVAS_R); 
+    //
+    ctx.stroke();   
+ }
  
-   }
-   ctx.restore();
-}
+
+
+// function drawAxes(ctx) {
+//    ctx.lineWidth = 0.5;
+
+//    for (let x = -CANVAS_R; x < CANVAS_R; x += K) {
+//        if (x) {
+//            ctx.strokeStyle =  "gray";
+//            ctx.setLineDash([5, 10]);
+//        } else {
+//            ctx.strokeStyle =  "black";
+//            ctx.setLineDash([]);
+//        }
+//        ctx.beginPath();
+//        ctx.moveTo(-CANVAS_R, x); 
+//        ctx.lineTo(CANVAS_R, x); 
+//        ctx.moveTo(x, -CANVAS_R); 
+//        ctx.lineTo(x, CANVAS_R); 
+//        ctx.stroke();   
+//    }
+//    ctx.setLineDash([]);
+// }
+

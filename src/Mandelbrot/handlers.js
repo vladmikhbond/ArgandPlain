@@ -9,27 +9,37 @@ const quolityStep = 2;
 let levelsMap = null;
 let hasTarget = false;
 
-canvas.addEventListener('mousedown', function(e) {         
-    hasTarget = true;
-    drawCursor(e);
-});
+canvas.addEventListener('mousedown', f1);
+canvas.addEventListener('touchstart', f1);
 
-canvas.addEventListener('mousemove', function(e) {
+function f1(e) {         
+    hasTarget = true;
+    let [x,y] = [e.offsetX, e.offsetY];
+    drawCursor(x, y);
+};
+
+canvas.addEventListener('mousemove', f2)
+
+function f2 (e) {
     showCurrents(e);
     if (hasTarget) {
         imageToCanvas();
-        drawCursor(e);
+        let [x,y] = [e.offsetX, e.offsetY];
+        drawCursor(x, y);    
     }
-});
+}
  
-canvas.addEventListener('mouseup', function(e) {
-    if (hasTarget) { 
-        enlarge(e);
-    }
-}); 
+canvas.addEventListener('mouseup', f3);
 
-function showCurrents(event) {
-    let [x, y] = [event.offsetX, event.offsetY];
+function f3(e) {
+    if (hasTarget) { 
+        let [x,y] = [e.offsetX, e.offsetY];
+        drawCursor(x, y);
+        enlarge(x, y);
+    }
+} 
+
+function showCurrents(x, y) {
     [x, y] = toModelCoord(x, y);
     resA.innerHTML = `C = ${x.toFixed(8)} + ${y.toFixed(8)}i`;
 
@@ -42,9 +52,8 @@ function showCurrents(event) {
     resB.innerHTML = `Level ${eq} ${level}`;
 }
 
-function enlarge(event) {
+function enlarge(x, y) {
     if (AREA.r / ENLAG > 1e-14) {
-        let [x, y] = [event.offsetX, event.offsetY];
         [x, y] = toModelCoord(x, y);
         AREA.x = x; 
         AREA.y = y; 
@@ -76,6 +85,3 @@ function refresh()
     resC.innerHTML = `T = ${t}"  Scale = ${AREA.pow2}`;
 }
 
-canvas.addEventListener('touchstart', function(ev) {
-    console.log(111111111111)
-});

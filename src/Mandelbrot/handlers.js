@@ -14,26 +14,40 @@ canvas.addEventListener('touchstart', f1);
 
 function f1(e) {         
     hasTarget = true;
-    let [x,y] = [e.offsetX, e.offsetY];
+    let [x,y] = eventCoord(e);
     drawCursor(x, y);
 };
 
+function eventCoord(e) {
+    switch (e.constructor.name) {
+        case "MouseEvent":
+            return [e.offsetX, e.offsetY];
+        case "TouchEvent":            
+            let x = e.changedTouches[0].clientX - e.target.offsetLeft;
+            let y = e.changedTouches[0].clientY - e.target.offsetTop;            
+            return [x, y];
+    }
+    throw Error("Bad event name")
+}
+
 canvas.addEventListener('mousemove', f2)
+canvas.addEventListener('touchmove', f2);
 
 function f2 (e) {
     showCurrents(e);
     if (hasTarget) {
         imageToCanvas();
-        let [x,y] = [e.offsetX, e.offsetY];
+        let [x,y] = eventCoord(e);
         drawCursor(x, y);    
     }
 }
  
 canvas.addEventListener('mouseup', f3);
+canvas.addEventListener('touchend', f3);
 
 function f3(e) {
     if (hasTarget) { 
-        let [x,y] = [e.offsetX, e.offsetY];
+        let [x,y] = eventCoord(e);
         drawCursor(x, y);
         enlarge(x, y);
     }

@@ -25,10 +25,14 @@ function startListener(e) {
            selectedInput = [inputA, inputB, inputC][i];           
        }
     }
-    console.log("start")  ////////////////////////
+    //console.log("start")  ////////////////////////
 }
 
-canvas.addEventListener('mousemove', function(e) {
+canvas.addEventListener('mousemove', moveListener)
+canvas.addEventListener('touchmove', moveListener);
+
+function moveListener (e) {
+    e.preventDefault();
     let [x, y] = eventCoord(e);
     [x,y] = toModelCoord(x, y);
     // set mouse pointer
@@ -43,14 +47,16 @@ canvas.addEventListener('mousemove', function(e) {
             selectedInput.value = selectedInput.value.slice(0, eqPos + 1) + " " + rvalue;
         refresh();
     }
-    console.log("move")  ////////////////////////
-});
+    //console.log("move")  ////////////////////////
+}
+ 
+canvas.addEventListener('mouseup', endListener);
+canvas.addEventListener('touchend', endListener);
 
-canvas.addEventListener('mouseup', function(e) {
+function endListener(e) {
     selectedInput = null;
-    console.log("end")  ////////////////////////
-});
-
+    //console.log("end")  ////////////////////////} 
+}
 
 // ------------------------------------------------------
 

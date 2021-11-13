@@ -17,8 +17,6 @@ function drawAxes(ctx) {
    ctx.fillText("Re", 2 * CANVAS_R - 25, y0 - 5);
    ctx.fillText("Im", CANVAS_R + 5, 0 + 20);
    
-   ctx.stroke(); 
-   
-   
+   ctx.stroke();   
 }
 

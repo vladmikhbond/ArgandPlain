@@ -4,6 +4,22 @@ inputA.addEventListener('change', refresh);
 inputB.addEventListener('change', refresh);
 inputC.addEventListener('change', refresh);
 
+
+for (let b of [...document.getElementsByClassName("b-c")]) {
+    b.addEventListener("click", learn);
+}
+
+function learn(e) {
+    let idx = +this.id.slice(4) - 1 ;
+    cardTitle.innerHTML = DATA[idx].h;
+    cardText.innerHTML = DATA[idx].t;
+    inputParams.value = DATA[idx].a[0];
+    inputA.value = DATA[idx].a[1];
+    inputB.value = DATA[idx].a[2];
+    inputC.value = DATA[idx].a[3];
+    refresh();
+}
+
 range.addEventListener('change', function(e) {
     AREA.r = 2 ** (range.value | 0);
     refresh();

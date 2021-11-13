@@ -2,6 +2,9 @@
     <body>
         <h2>Argand Plane</h2>
         <div style="margin-bottom: 6px;">            
+            <input type="text" id="inputParams" style="width: 512px; border-color:gray;" value="p=3.1416; e=2.7183; d=2.7183^(3.1416i/2);">
+        </div>
+        <div style="margin-bottom: 6px;">            
             <input type="text" id="inputA" style="width: 256px; border-color: blue;" value="A = 1 + i">
             <span id="resA"></span>
         </div>
@@ -19,12 +22,15 @@
         <canvas id="canvas" width="512" height="512" style="border: solid thin"></canvas>
 
         <div style="margin-bottom: 6px;">
-            <input type="range" id="range" style="width: 512px;" min="0" max="5" step="1", value="2">
+            <input type="range" id="range" style="width: 512px;" min="0" max="10" step="1", value="2">
         </div>
         
         <script src="lib/complex.min.js"></script>
+        
         <script src="src/common/classes.js"></script>    
         <script src="src/common/model.js"></script>    
+        <script src="src/common/drawing.js"></script> 
+
         <script src="src/Argand/drawing.js"></script>    
         <script src="src/Argand/handlers.js"></script>
         <script src="src/Argand/main.js"></script>

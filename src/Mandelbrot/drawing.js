@@ -1,17 +1,4 @@
-function drawAxes(ctx) {
-   ctx.lineWidth = 0.5;
-   ctx.strokeStyle =  "black";
-   let [x0, y0] = toCanvasCoord(0, 0);
-   ctx.beginPath();
-   //
-   ctx.moveTo(0, y0); 
-   ctx.lineTo(2 * CANVAS_R, y0); 
-   //
-   ctx.moveTo(x0, 0); 
-   ctx.lineTo(x0, 2 * CANVAS_R); 
-   //
-   ctx.stroke();   
-}
+
 
 function draw(levelMap, quol) {
    const ctx = canvas.getContext("2d");

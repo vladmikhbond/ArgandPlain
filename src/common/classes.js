@@ -31,7 +31,7 @@ class Expression {
         this.value = null;
     }
    
-    // Подсталяет тело другого выражения вместо его имени.
+    // Подставляет тело другого выражения вместо его имени.
     // заодно подставляет и константы.
     // делает это до лексического анализа
     substitution(other) {
@@ -40,9 +40,13 @@ class Expression {
         }       
     }
 
-    substitutionConst() {     
-        this._repAll('e', Math.E.toString());
-        this._repAll('p', Math.PI.toString());
+    substitutionParams(str) {   
+        str = str.replace(/\s/g, '');  
+        let ss = str.split(";").filter(x => x);
+        for(let s of ss) {
+            let [l, r] = s.split("=");
+            this._repAll(l, r);
+        }
     }
 
     _repAll(regex, subst) {
@@ -63,4 +67,22 @@ class Expression {
     isNear(x, y) { 
         return new Complex(x, y).sub(this.value).abs() < 0.1; 
     }
+}
+
+class Area {
+    constructor (x, y, r) {
+        this.x = x;   // center X
+        this.y = y;   // center Y
+        this.r = r;   // radius
+    }
+
+    get x1() { return this.x - this.r};  
+    get x2() { return this.x + this.r};
+
+    get y1() { return this.y - this.r};
+    get y2() { return this.y + this.r};
+
+    get pow2() {return this.r / 2};
+
+    get unit() {return canvas.width / (2 * this.r)};
 }

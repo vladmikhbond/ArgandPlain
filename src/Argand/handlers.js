@@ -1,5 +1,5 @@
 // ARGAND
-
+inputParams.addEventListener('change', refresh);
 inputA.addEventListener('change', refresh);
 inputB.addEventListener('change', refresh);
 inputC.addEventListener('change', refresh);
@@ -69,7 +69,7 @@ function refresh() {
       
     for (let i = 0; i < EXPRS.length; i++) {
         // substitution      
-        EXPRS[i].substitutionConst()
+        EXPRS[i].substitutionParams(inputParams.value);
         for (let j = 0; j < i; j++) {
             EXPRS[i].substitution(EXPRS[j])
         }

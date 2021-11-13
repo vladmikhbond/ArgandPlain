@@ -1,13 +1,7 @@
 const canvas = document.getElementById("canvas");
 
 const CANVAS_R = canvas.width / 2; 
-const AREA = {x: 0, y: 0, // center of area
-   r: 2**range.value,                  // radius of area
-   get x1() { return this.x - this.r}, get x2() { return this.x + this.r}, 
-   get y1() { return this.y - this.r}, get y2() { return this.y + this.r},
-   get pow2() {return this.r / 2}
-};
-
+const AREA = new Area(0, 0, 2**range.value);
 const EXPRS = [null, null, null];
 
 

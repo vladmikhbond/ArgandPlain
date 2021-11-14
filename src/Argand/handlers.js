@@ -4,12 +4,13 @@ inputA.addEventListener('change', refresh);
 inputB.addEventListener('change', refresh);
 inputC.addEventListener('change', refresh);
 
-
-for (let b of [...document.getElementsByClassName("b-c")]) {
-    b.addEventListener("click", learn);
+let buttons = [...document.getElementsByClassName("b-c")]
+for (let i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", learn);
+    buttons[i].title = DATA[i].h;
 }
 
-function learn(e) {
+function learn() {
     let idx = +this.id.slice(4) - 1 ;
     cardTitle.innerHTML = DATA[idx].h;
     cardText.innerHTML = DATA[idx].t;
@@ -41,7 +42,6 @@ function startListener(e) {
            selectedInput = [inputA, inputB, inputC][i];           
        }
     }
-    //console.log("start")  ////////////////////////
 }
 
 canvas.addEventListener('mousemove', moveListener)
@@ -63,7 +63,6 @@ function moveListener (e) {
             selectedInput.value = selectedInput.value.slice(0, eqPos + 1) + " " + rvalue;
         refresh();
     }
-    //console.log("move")  ////////////////////////
 }
  
 canvas.addEventListener('mouseup', endListener);
@@ -71,7 +70,6 @@ canvas.addEventListener('touchend', endListener);
 
 function endListener(e) {
     selectedInput = null;
-    //console.log("end")  ////////////////////////} 
 }
 
 // ------------------------------------------------------

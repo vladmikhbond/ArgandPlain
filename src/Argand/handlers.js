@@ -3,6 +3,9 @@ inputParams.addEventListener('change', refresh);
 inputA.addEventListener('change', refresh);
 inputB.addEventListener('change', refresh);
 inputC.addEventListener('change', refresh);
+range.addEventListener('change', refresh);
+
+// learning ---------------------------------------
 
 let buttons = [...document.getElementsByClassName("b-c")]
 for (let i = 0; i < buttons.length; i++) {
@@ -12,19 +15,15 @@ for (let i = 0; i < buttons.length; i++) {
 
 function learn() {
     let idx = +this.id.slice(4) - 1 ;
-    cardTitle.innerHTML = DATA[idx].h;
+    cardTitle.innerHTML = `${idx+1} ${DATA[idx].h}`;
     cardText.innerHTML = DATA[idx].t;
     inputParams.value = DATA[idx].a[0];
     inputA.value = DATA[idx].a[1];
     inputB.value = DATA[idx].a[2];
     inputC.value = DATA[idx].a[3];
+    range.value = DATA[idx].m;
     refresh();
 }
-
-range.addEventListener('change', function(e) {
-    AREA.r = 2 ** (range.value | 0);
-    refresh();
-});
 
 // canvas mouse events ---------------------------------
 
@@ -90,7 +89,7 @@ function refresh() {
         // evalution      
         EXPRS[i].eval();
     }
-   
+    AREA.r = 2 ** (range.value | 0);
     show();
     draw();
 }

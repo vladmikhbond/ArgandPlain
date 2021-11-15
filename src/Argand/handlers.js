@@ -6,13 +6,13 @@ inputC.addEventListener('change', refresh);
 range.addEventListener('change', refresh);
 
 // learning ---------------------------------------
-for (let i = 1; i <= DATA.length; i++) {
+for (let i = 0; i < DATA.length; i++) {
     let btn = document.createElement("button");
     btn.id="card" + i;
     btn.className = "btn btn-info"; 
-    btn.innerHTML = i;
+    btn.innerHTML = i + 1;
     btn.type = "button";
-    btn.title = DATA[i-1].h;
+    btn.title = DATA[i].h;
     btn.addEventListener("click", learn);
     btn.style.marginLeft = "4px";
     document.getElementById("buttonsDiv").appendChild(btn);
@@ -20,14 +20,26 @@ for (let i = 1; i <= DATA.length; i++) {
 
 
 function learn() {
-    let idx = +this.id.slice(4) - 1;
-    cardTitle.innerHTML = `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${idx+1} ${DATA[idx].h}`;
-    cardText.innerHTML = DATA[idx].t;
+    let i = +this.id.slice(4);
+    cardTitle.innerHTML = `${i+1} ${DATA[i].h}`;
+    let dataT = DATA[i].t.replace( /<<(b):(.*)>>/g,
+        '<span class="config" onclick="learn2(' + i + ',\'$1\')">$2</span>');
+    cardText.innerHTML = dataT;
+    inputA.value = DATA[i].a[0];
+    inputB.value = DATA[i].a[1];
+    inputC.value = DATA[i].a[2];
+    if (DATA[i].a[3]) 
+       inputParams.value = DATA[i].a[3];
+    range.value = DATA[i].m;
+    refresh();
+}
+
+
+function learn2(idx, x) {
     inputParams.value = DATA[idx].a[0];
-    inputA.value = DATA[idx].a[1];
-    inputB.value = DATA[idx].a[2];
-    inputC.value = DATA[idx].a[3];
-    range.value = DATA[idx].m;
+    inputA.value = DATA[idx][x][0];
+    inputB.value = DATA[idx][x][1];
+    inputC.value = DATA[idx][x][2];
     refresh();
 }
 

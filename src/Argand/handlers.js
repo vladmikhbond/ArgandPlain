@@ -35,11 +35,12 @@ function learn() {
 }
 
 
-function learn2(idx, x) {
-    inputParams.value = DATA[idx].a[0];
-    inputA.value = DATA[idx][x][0];
-    inputB.value = DATA[idx][x][1];
-    inputC.value = DATA[idx][x][2];
+function learn2(i, x) {
+    inputA.value = DATA[i][x][0];
+    inputB.value = DATA[i][x][1];
+    inputC.value = DATA[i][x][2];
+    if (DATA[i][x][3]) 
+       inputParams.value = DATA[i][x][3];
     refresh();
 }
 

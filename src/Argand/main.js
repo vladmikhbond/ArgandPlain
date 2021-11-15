@@ -6,5 +6,5 @@ const EXPRS = [null, null, null];
 
 //setTimeout(refresh, 10);
 
-learn.call(buttons[0]);
+learn.call(buttonsDiv.children[0]); 
 

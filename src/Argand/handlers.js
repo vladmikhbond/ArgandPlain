@@ -6,16 +6,22 @@ inputC.addEventListener('change', refresh);
 range.addEventListener('change', refresh);
 
 // learning ---------------------------------------
-
-let buttons = [...document.getElementsByClassName("b-c")]
-for (let i = 0; i < buttons.length; i++) {
-    buttons[i].addEventListener("click", learn);
-    buttons[i].title = DATA[i].h;
+for (let i = 1; i <= DATA.length; i++) {
+    let btn = document.createElement("button");
+    btn.id="card" + i;
+    btn.className = "btn btn-info"; 
+    btn.innerHTML = i;
+    btn.type = "button";
+    btn.title = DATA[i-1].h;
+    btn.addEventListener("click", learn);
+    btn.style.marginLeft = "4px";
+    document.getElementById("buttonsDiv").appendChild(btn);
 }
 
+
 function learn() {
-    let idx = +this.id.slice(4) - 1 ;
-    cardTitle.innerHTML = `${idx+1} ${DATA[idx].h}`;
+    let idx = +this.id.slice(4) - 1;
+    cardTitle.innerHTML = `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${idx+1} ${DATA[idx].h}`;
     cardText.innerHTML = DATA[idx].t;
     inputParams.value = DATA[idx].a[0];
     inputA.value = DATA[idx].a[1];

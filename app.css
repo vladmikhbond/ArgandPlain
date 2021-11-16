@@ -2,3 +2,17 @@
    font-style: italic;
    cursor:pointer;
 }
+
+#resA1, #resB1, #resC1 {   
+   margin-left: 10px;
+}
+#resA2, #resB2, #resC2, #resA3, #resB3, #resC3 {
+   font-size: small;
+   margin-left: 10px;
+}
+#resA2, #resB2, #resC2 {
+   color:brown;
+}
+#resA3, #resB3, #resC3 {
+   color:forestgreen;
+}

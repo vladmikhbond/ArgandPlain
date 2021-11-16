@@ -5,6 +5,7 @@ inputB.addEventListener('change', refresh);
 inputC.addEventListener('change', refresh);
 range.addEventListener('change', refresh);
 
+
 // learning ---------------------------------------
 for (let i = 0; i < DATA.length; i++) {
     let btn = document.createElement("button");
@@ -28,8 +29,7 @@ function learn() {
     inputA.value = DATA[i].a[0];
     inputB.value = DATA[i].a[1];
     inputC.value = DATA[i].a[2];
-    if (DATA[i].a[3]) 
-       inputParams.value = DATA[i].a[3];
+    if (DATA[i].a[3]) inputParams.value = DATA[i].a[3];
     range.value = DATA[i].m;
     refresh();
 }

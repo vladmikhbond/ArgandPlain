@@ -2,16 +2,20 @@ function show() {
    const ids = ["resA", "resB", "resC"];
    for (let i = 0; i < ids.length; i++) {
 
-        let res = document.getElementById(ids[i]);
-        if (EXPRS[i] && EXPRS[i].value) {
+    let res1 = document.getElementById(ids[i]+'1');
+    let res2 = document.getElementById(ids[i]+'2');
+    let res3 = document.getElementById(ids[i]+'3');
+    if (EXPRS[i] && EXPRS[i].value) {
            let z = EXPRS[i].value; 
            let re = z.re.toFixed(2);
            let im = z.im.toFixed(2);
            let amp = z.abs().toFixed(2);
            let phi = (z.arg()*180/Math.PI).toFixed(0);
-           res.innerHTML = `<span style="width: 100px; display: inline-block;">${re} + ${im}i</span>${amp}e<sup>${phi}i</sup>`;
+           res1.innerHTML = `${re} + ${im}i`;
+           res2.innerHTML = `${amp}e<sup>${phi}i</sup>`;           
+           res3.innerHTML = `${amp}(cos ${phi} + i sin ${phi})`;           
         } else { 
-            res.innerHTML = "n/a";
+            res1.innerHTML = res2.innerHTML =  res3.innerHTML = "";
         }
    }
 }

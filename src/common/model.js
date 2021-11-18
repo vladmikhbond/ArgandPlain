@@ -1,5 +1,3 @@
-
-
 // String => [Lexema]
 //
 function lexicalAnalisys(input) 
@@ -7,7 +5,8 @@ function lexicalAnalisys(input)
     const isOpenBracketOrOperator = x => "(+-*/^".indexOf(x) > -1;
     const isBracketOrOperator = x => "()+-*/^".indexOf(x) > -1;
     const isDigit = x => "01234.56789".indexOf(x) > -1;
-    const isVariable = x => 'A' <= x && x <= 'Z';
+    //const isVariable = x => 'A' <= x && x <= 'Z';
+    const isVariable = x => x != 'i' && x.toUpperCase() != x.toLowerCase();
     
     input = input.replace(/\s/g, '');
     const output = []; 
@@ -51,6 +50,17 @@ function lexicalAnalisys(input)
     if (nStr) {           
         output.push(new Lexema('r', +nStr));
     }
+    // postoperation  rer -> r; rei -> i;  
+    for (let i = 0; i < output.length - 2; i++) {
+        if (output[i].tag == 'r' && output[i+1].tag == 'v' && output[i+1].tag == 'e' ) {
+            if (output[i+2].tag == 'r' || output[i+2].tag == 'i') {
+                output[i].tag = output[i+2].tag;
+                output[i].num += "e" + output[i+2].num;
+                output.splice(i+1, 2);
+            }   
+        }
+    }
+
     return output;
 }
 
@@ -193,8 +203,10 @@ function test() {
             console.log(input)
     }
 
-    t("3.4i * Z", 0, 0, {Z: Complex.ZERO});
-    t("-A * (B + C)", -1, -1, {A: Complex.ONE, B: Complex.ONE, C: Complex.I});
+    // t("3.4e3i", 0, 0, {Z: Complex.ZERO});
+
+    // t("3.4i * Z", 0, 0, {Z: Complex.ZERO});
+    // t("-A * (B + C)", -1, -1, {A: Complex.ONE, B: Complex.ONE, C: Complex.I});
 
 //    t("0^(-2+-2i)", NaN, NaN);  // ошибка в Complex.js
 

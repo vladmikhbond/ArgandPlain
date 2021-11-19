@@ -54,9 +54,10 @@ canvas.addEventListener('mousedown', startListener);
 canvas.addEventListener('touchstart', startListener);
 
 function startListener(e) {    
-    let [x, y] = eventCoord(e);
+    let [ex, ey] = eventCoord(e);
     for (let i = 0; i < EXPRS.length; i++) {
-       if (EXPRS[i].isNear(...toModelCoord(x, y))) {
+        let [x, y] = toModelCoord(ex, ey);
+       if (EXPRS[i].isNear(x, y)) {
            selectedInput = [inputA, inputB, inputC][i];           
        }
     }

@@ -29,9 +29,9 @@ function lexicalAnalisys(input)
             if ( output[i].tag == '+') output[i].tag = '#';
         }
         // отдельно стоящие i, j - в мнимое i
-        if ( output[i].tag == 'v' && (output[i].num == 'i' || output[i].num == 'j')) {
+        if ( output[i].tag == 'v' && (output[i].val == 'i' || output[i].val == 'j')) {
             output[i].tag = 'i';
-            output[i].num = 1;           
+            output[i].val = 1;           
         }
     }
     return output;
@@ -123,25 +123,25 @@ function toPoland(input) {
 // dict = {X: Complex1, Y: Complex2, ... }
 function evalPoland(poland, dict) {
     const stack = [];
-    for (let pol of poland) {
-        switch(pol.tag) {
+    for (let lex of poland) {
+        switch(lex.tag) {
         case 'r':
-            stack.push(new Complex(pol.num, 0));
+            stack.push(new Complex(lex.val, 0));
             break;
         case 'i':
-            stack.push(new Complex(0, pol.num));
+            stack.push(new Complex(0, lex.val));
             break;
         case 'v':
-            if (!dict || !dict[pol.num])
+            if (!dict || !dict[lex.val])
                 throw new Error("wrong dictionary");
-            stack.push(dict[pol.num]);
+            stack.push(dict[lex.val]);
             break;
         case '+': case '-': case '/': case '*': case '^':
             let c2 = stack.pop();
             let c1 = stack.pop();
             if (!c1 || !c2) 
                 throw new Error("wrong poland expression");
-            switch (pol.tag) {
+            switch (lex.tag) {
                 case '+': stack.push(c1.add(c2)); break;
                 case '-': stack.push(c1.sub(c2)); break;
                 case '*': stack.push(c1.mul(c2)); break;
@@ -153,7 +153,7 @@ function evalPoland(poland, dict) {
             let c = stack.pop();
             if (!c) 
                 throw new Error("wrong poland expression")
-            switch (pol.tag) {
+            switch (lex.tag) {
                 case '#': stack.push(c); break;
                 case '~': stack.push(c.neg()); break;
             } 

@@ -1,14 +1,14 @@
 class Lexema {
-    constructor(tag, num) 
+    constructor(tag, val) 
     {
         // (,  ),  +, -, *, /,  ^,  r число,  i мним.число,  v переменная, ~ унар.минус, # унар.плюс 
         this.tag = tag;  
-        this.num = num;
+        this.val = val;
     }
     toString() {
-        if (!this.num)
+        if (!this.val)
             return this.tag;
-        return this.num + (this.tag == 'i' ? 'i' : '');
+        return this.val + (this.tag == 'i' ? 'i' : '');
     }
 }
 
@@ -34,26 +34,41 @@ class Expression {
     }
    
     // Подставляет тело другого выражения вместо его имени.
-    // заодно подставляет и константы.
     // делает это до лексического анализа
     substitution(other) {
         if (other.name && other != this) {
-           this._repAll(other.name, other.body); 
+           this._replaceAll(other.name, other.body); 
         }       
     }
-
+    
+    // Подставляет строку параметров
+    // "R = 1;   L = 3.0e-3;   C = 2.1e-3;   ω = 2 * 3.14159 * 50"
     substitutionParams(str) {   
         str = str.replace(/\s/g, '');  
-        let ss = str.split(";").filter(x => x);
-        for(let s of ss) {
-            let [l, r] = s.split("=");
-            this._repAll(l, r);
+        let equotions = str.split(";").filter(x => x);
+        // из массива уравнений составляем словарь констант
+        let dict = {};
+        for (let eq of equotions) {
+            let [key, val] = eq.split("=");
+            dict[key] = val;
+        }
+        // делаем возможные подстановки внутри словаря
+        for (let k1 in dict) {
+            let r = new RegExp(k1,"g"), v = dict[k1];
+            for (let k2 in dict) {
+                if (k1 == k2) continue;
+                dict[k2] = dict[k2].replace(r, v);
+            }         
+        }    
+        // подставляем константы из словаря в выражение
+        for (let key in dict) {
+            this._replaceAll(key, dict[key]);
         }
     }
 
-    _repAll(regex, subst) {
-        let re = new RegExp(regex,"g");
-        this.body = this.body.replace(re, "(" + subst + ")");
+    _replaceAll(name, value) {
+        let regex = new RegExp(name,"g");
+        this.body = this.body.replace(regex, "(" + value + ")");
     }
 
     eval() {
@@ -67,7 +82,7 @@ class Expression {
     }
 
     isNear(x, y) { 
-        return new Complex(x, y).sub(this.value).abs() < 0.1; 
+        return new Complex(x, y).sub(this.value).abs() < 0.01 * AREA.r; 
     }
 }
 

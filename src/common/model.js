@@ -38,17 +38,18 @@ function lexicalAnalisys(input)
 
     // inner functions: input & output are in closure
     function saveNumber(i) {
-        let s = "";
-        for(; i < input.length && (isDigit(input[i]) || input[i] == 'e'); i++) 
-            s += input[i];
-        let lex = new Lexema('r', +s);
-        if (input[i] == 'i') {
-            lex.tag = 'i';
-        } else {
-            i--;
-        }  
-        output.push(lex);  
-        return i; 
+        let regex = /^[0-9]+[.]?[0-9]*([eE][-+]?[0-9]+)?[ij]?/;
+        let match = regex.exec(input.slice(i));
+        if (match) {
+            let s = match[0], last = s[s.length-1];
+            if (last == 'i' || last == 'j' ) {
+                output.push(new Lexema('i', +s.slice(0, -1)));
+            } else {
+                output.push(new Lexema('r', +s));
+            }
+            return i + s.length - 1;   
+        }
+        throw Error("Unknown error :(");
     }
     function saveVariable(i) {
         let s = "";
@@ -202,22 +203,18 @@ function test() {
     }
 
     
-    //t("3.4e3i", 0, 3400, {Z: Complex.ZERO});
+    t("x-3e-3+2", 1.997, 0, {x: Complex.ZERO});
     t(" i", 0, 1, {Z: Complex.ZERO});
 
-    // t("3.4i * Z", 0, 0, {Z: Complex.ZERO});
-    // t("-A * (B + C)", -1, -1, {A: Complex.ONE, B: Complex.ONE, C: Complex.I});
+    t("3.4i * Z", 0, 0, {Z: Complex.ZERO});
+    t("-A * (B + C)", -1, -1, {A: Complex.ONE, B: Complex.ONE, C: Complex.I});
 
-//    t("0^(-2+-2i)", NaN, NaN);  // ошибка в Complex.js
+    //t("0^(-2+-2i)", NaN, NaN);  // ошибка в Complex.js
 
-//     t("3.4i", 0, 3.4); 
-//     t("-1.2 + +3.4i", -1.2, 3.4);
-//     t("((1-(2+3))*1)^(1+2)", -64, 0)  //"-63.99999999999998 + 2.3513218543629174e-14i"
-//     t("1+2i*3i-4/(5+6i)", -5.32786885245901, 0.3934426229508196);     //"-5.327868852459017 + 0.3934426229508196i");   
+    t("3.4i", 0, 3.4); 
+    t("-1.2 + +3.4i", -1.2, 3.4);
+    t("((1-(2+3))*1)^(1+2)", -64, 0)  //"-63.99999999999998 + 2.3513218543629174e-14i"
+    t("1+2i*3i-4/(5+6i)", -5.32786885245901, 0.3934426229508196);     //"-5.327868852459017 + 0.3934426229508196i");   
 
 }
 test()
-
-
-
-// (0+0i)^(-2+-2i)

@@ -2,67 +2,65 @@
 //
 function lexicalAnalisys(input) 
 {
-    const isOpenBracketOrOperator = x => "(+-*/^".indexOf(x) > -1;
-    const isBracketOrOperator = x => "()+-*/^".indexOf(x) > -1;
     const isDigit = x => "01234.56789".indexOf(x) > -1;
-    //const isVariable = x => 'A' <= x && x <= 'Z';
-    const isVariable = x => x != 'i' && x.toUpperCase() != x.toLowerCase();
-    
+    const isLetter = x => x.toUpperCase() != x.toLowerCase();
+    const isOpenBracketOrOperator = x => "(+-*/^".indexOf(x) > -1;
+
     input = input.replace(/\s/g, '');
     const output = []; 
-    let nStr = "";  // строковое представление числа
+
+    // первая фаза
     for (let i = 0; i < input.length; i++) 
-    {
-        let c = input[i];
-        if (isBracketOrOperator(c)) {
-            // unary operation
-            if (i == 0 || isOpenBracketOrOperator(input[i-1])) 
-            {   
-                if (c == '-') 
-                   output.push(new Lexema('~'));  //  unary -
-                else if (c == '+') 
-                   output.push(new Lexema('#'));  //  unary +
-                else
-                   output.push(new Lexema(c));
-            }
-            // binary operation 
-            else 
-            {
-                if (nStr) {           
-                    output.push(new Lexema('r', +nStr));
-                    nStr = "";
-                }
-                output.push(new Lexema(c));
-            }
-        } else if (isVariable(c)) { 
-            output.push(new Lexema('v', c));           
-        } else if (isDigit(c)) {
-            nStr += c;
-        } else if (c == 'i') {
-            if (nStr) {           
-                output.push(new Lexema('i', +nStr));               
-            } else {
-                output.push(new Lexema('i', 1));
-            }
-            nStr = "";
-        }       
+    {  
+        if (isDigit(input[i])) 
+            i = saveNumber(i);
+        else if (isLetter(input[i])) 
+            i = saveVariable(i);
+        else 
+            output.push(new Lexema(input[i]));
     }
-    if (nStr) {           
-        output.push(new Lexema('r', +nStr));
-    }
-    // postoperation  rer -> r; rei -> i;  
-    for (let i = 0; i < output.length - 2; i++) {
-        if (output[i].tag == 'r' && output[i+1].tag == 'v' && output[i+1].tag == 'e' ) {
-            if (output[i+2].tag == 'r' || output[i+2].tag == 'i') {
-                output[i].tag = output[i+2].tag;
-                output[i].num += "e" + output[i+2].num;
-                output.splice(i+1, 2);
-            }   
+    
+    // вторая фаза
+    for (let i = 0; i < output.length; i++) 
+    {   
+        // ~ унар.минус, # унар.плюс
+        if (i == 0 || isOpenBracketOrOperator(output[i-1].tag) ) {
+            if ( output[i].tag == '-') output[i].tag = '~';
+            if ( output[i].tag == '+') output[i].tag = '#';
+        }
+        // отдельно стоящие i, j - в мнимое i
+        if ( output[i].tag == 'v' && (output[i].num == 'i' || output[i].num == 'j')) {
+            output[i].tag = 'i';
+            output[i].num = 1;           
         }
     }
-
     return output;
+
+    // inner functions: input & output are in closure
+    function saveNumber(i) {
+        let s = "";
+        for(; i < input.length && (isDigit(input[i]) || input[i] == 'e'); i++) 
+            s += input[i];
+        let lex = new Lexema('r', +s);
+        if (input[i] == 'i') {
+            lex.tag = 'i';
+        } else {
+            i--;
+        }  
+        output.push(lex);  
+        return i; 
+    }
+    function saveVariable(i) {
+        let s = "";
+        const c = input[i]; 
+        for(; i < input.length && isLetter(input[i]); i++) 
+            s += input[i];
+        output.push(new Lexema('v', s));
+        return i - 1;
+    }
+
 }
+
 
 function getPriority(op) {
     switch(op) {
@@ -203,7 +201,9 @@ function test() {
             console.log(input)
     }
 
-    // t("3.4e3i", 0, 0, {Z: Complex.ZERO});
+    
+    //t("3.4e3i", 0, 3400, {Z: Complex.ZERO});
+    t(" i", 0, 1, {Z: Complex.ZERO});
 
     // t("3.4i * Z", 0, 0, {Z: Complex.ZERO});
     // t("-A * (B + C)", -1, -1, {A: Complex.ONE, B: Complex.ONE, C: Complex.I});

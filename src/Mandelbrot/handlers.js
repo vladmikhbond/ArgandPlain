@@ -45,7 +45,7 @@ function endListener(e) {
         drawTargetCursor(x, y);
         enlarge(x, y);
     }
-    console.log(e.constructor.name) ///////////////
+    // console.log(e.constructor.name) ///////////////
 } 
 
 function showCurrents(x, y) {
@@ -91,6 +91,7 @@ function refresh()
     draw(levelsMap, quolityStep);
     
     t = (new Date().getTime() - t) / 1000;
-    resC.innerHTML = `T = ${t}"  Scale = ${AREA.pow2}`;
+    let scale = AREA.r / 2;
+    resC.innerHTML = `T = ${t}"  Scale = ${scale}`;
 }
 

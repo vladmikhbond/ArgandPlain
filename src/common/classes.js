@@ -86,6 +86,8 @@ class Expression {
     }
 }
 
+// Положение и размер выбранной квадратной области (координаты модельные)
+//
 class Area {
     constructor (x, y, r) {
         this.x = x;   // center X
@@ -99,7 +101,9 @@ class Area {
     get y1() { return this.y - this.r};
     get y2() { return this.y + this.r};
 
-    get pow2() {return this.r / 2};
 
+    // get pow2() {return this.r / 2};
+
+    // размер единицы длины модели в пикселях
     get unit() {return canvas.width / (2 * this.r)};
 }

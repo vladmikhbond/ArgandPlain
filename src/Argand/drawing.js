@@ -23,26 +23,35 @@ function show() {
 function draw() {
    const ctx = canvas.getContext("2d");
    ctx.clearRect(0, 0, canvas.width, canvas.height); 
+
    drawAxes(ctx);
 
-   ctx.lineWidth = 2;
+   ctx.fillStyle = "black";
+   ctx.textAlign = "center";
    ctx.lineCap = 'round';
+
    for (let expr of EXPRS) {
        drawExpression(expr, ctx);
    }
    drawSumOrMult(ctx);
 }  
 
+
 function drawExpression(expr, ctx) {
     if (expr && expr.value) {
         let [x0, y0] = toCanvasCoord(0, 0);
         let [x, y] = toCanvasCoord(expr.value.re, expr.value.im);
+        // vector
+        ctx.lineWidth = 2;
         ctx.strokeStyle = expr.color;           
         ctx.beginPath(); 
         ctx.moveTo(x0, y0); 
         ctx.lineTo(x, y);
         ctx.arc(x, y, 2, 0, 2 * Math.PI); 
         ctx.stroke();
+        // label
+        if (expr.name) 
+            ctx.fillText(expr.name, x, y - 6);           
     }
 }
 

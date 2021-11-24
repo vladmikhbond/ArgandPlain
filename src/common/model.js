@@ -8,7 +8,11 @@ function lexicalAnalisys(input)
 
     input = input.replace(/\s/g, '');
     const output = []; 
-
+    // аварийные сообщения
+    if (input.indexOf("**") != -1) 
+        alert("Возведение в степень обозначается ^, а не **.");
+    let regex = /\w*i/;
+        
     // первая фаза
     for (let i = 0; i < input.length; i++) 
     {  

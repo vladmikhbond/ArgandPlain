@@ -41,26 +41,9 @@ class Expression {
         }       
     }
     
-    // Подставляет строку параметров
+    // Подставляет константы из словаря в выражение
     // "R = 1;   L = 3.0e-3;   C = 2.1e-3;   ω = 2 * 3.14159 * 50"
-    substitutionParams(str) {   
-        str = str.replace(/\s/g, '');  
-        let equotions = str.split(";").filter(x => x);
-        // из массива уравнений составляем словарь констант
-        let dict = {};
-        for (let eq of equotions) {
-            let [key, val] = eq.split("=");
-            dict[key] = val;
-        }
-        // делаем возможные подстановки внутри словаря
-        for (let k1 in dict) {
-            let r = new RegExp(k1,"g"), v = dict[k1];
-            for (let k2 in dict) {
-                if (k1 == k2) continue;
-                dict[k2] = dict[k2].replace(r, v);
-            }         
-        }    
-        // подставляем константы из словаря в выражение
+    substitutionParams(dict) {   
         for (let key in dict) {
             this._replaceAll(key, dict[key]);
         }

@@ -99,10 +99,10 @@ function refresh() {
     EXPRS[0] = new Expression(inputA.value, inputA.style.borderColor);
     EXPRS[1] = new Expression(inputB.value, inputB.style.borderColor);
     EXPRS[2] = new Expression(inputC.value, inputC.style.borderColor);
-      
+    const dictParams = parseConstatnsLine(inputParams.value);  
     for (let i = 0; i < EXPRS.length; i++) {
         // substitution      
-        EXPRS[i].substitutionParams(inputParams.value);
+        EXPRS[i].substitutionParams(dictParams);
         for (let j = 0; j < i; j++) {
             EXPRS[i].substitution(EXPRS[j])
         }

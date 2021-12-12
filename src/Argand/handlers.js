@@ -23,7 +23,7 @@ for (let i = 0; i < DATA.length; i++) {
 function learn() {
     let i = +this.id.slice(4);
     cardTitle.innerHTML = `${i+1} ${DATA[i].h}`;
-    let dataT = DATA[i].t.replace( /<<(b):(.*)>>/g,
+    let dataT = DATA[i].t.replace( /<<(\w):(.*)>>/g,
         '<span class="config" onclick="learn2(' + i + ',\'$1\')">$2</span>');
     cardText.innerHTML = dataT;
     inputA.value = DATA[i].a[0];
